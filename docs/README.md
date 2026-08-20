@@ -1,4 +1,4 @@
-# Duke User Guide
+# Thai's Bot User Guide
 
 // Update the title above to match the actual product name
 
