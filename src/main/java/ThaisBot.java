@@ -91,6 +91,22 @@ public class ThaisBot {
                     System.out.println("Got it. I've added this task:");
                     System.out.println("  " + task);
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                } else if (command.equals("delete")) {
+                    if (parts.length < 2) {
+                        throw new ThaisBotException("Please provide a task number to delete.");
+                    }
+                    try {
+                        int taskNumber = Integer.parseInt(parts[1]);
+                        if (taskNumber < 1 || taskNumber > tasks.size()) {
+                            throw new ThaisBotException("Task number out of range.");
+                        }
+                        Task removedTask = tasks.remove(taskNumber - 1);
+                        System.out.println("Noted. I've removed this task:");
+                        System.out.println("  " + removedTask);
+                        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    } catch (NumberFormatException e) {
+                        throw new ThaisBotException("Task number must be a valid integer.");
+                    }
                 } else {
                     throw new ThaisBotException("I'm sorry, but I don't know what that means :( . Please try again!");
                 }
