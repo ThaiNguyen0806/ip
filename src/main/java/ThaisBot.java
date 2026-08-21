@@ -34,8 +34,34 @@ public class ThaisBot {
                 task.unmarkAsDone();
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("  " + task);
+            } else if (command.equals("todo")) {
+                String description = parts.length > 1 ? parts[1] : "";
+                Task task = new Todo(description);
+                tasks.add(task);
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + task);
+                System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+            } else if (command.equals("deadline")) {
+                String[] deadlineParts = parts.length > 1 ? parts[1].split(" /by ", 2) : new String[0];
+                if (deadlineParts.length == 2) {
+                    Task task = new Deadline(deadlineParts[0], deadlineParts[1]);
+                    tasks.add(task);
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  " + task);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                }
+            } else if (command.equals("event")) {
+                String[] eventParts = parts.length > 1 ? parts[1].split(" /from | /to ", 3) : new String[0];
+                if (eventParts.length == 3) {
+                    Task task = new Event(eventParts[0], eventParts[1], eventParts[2]);
+                    tasks.add(task);
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  " + task);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                }
             } else {
-                tasks.add(new Task(userInput));
+                Task task = new Todo(userInput);
+                tasks.add(task);
                 System.out.println("added: " + userInput);
             }
         }
