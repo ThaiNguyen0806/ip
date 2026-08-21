@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class ThaisBot {
     public static void main(String[] args) {
         System.out.println("Hello! I'm Thai's Bot.");
-        System.out.println("What can I do for you today?");
+        System.out.println("What can I do for you today :D?");
 
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<>();
