@@ -72,4 +72,18 @@ public class Ui {
             System.out.println("No deadlines or events found on that date.");
         }
     }
+
+    public void showMatchingTasks(TaskList tasks, String keyword) {
+        System.out.println("Here are the matching tasks in your list:");
+        int shownCount = 0;
+        for (Task task : tasks) {
+            if (task.getDescription().contains(keyword)) {
+                shownCount++;
+                System.out.println(shownCount + "." + task);
+            }
+        }
+        if (shownCount == 0) {
+            System.out.println("No matching tasks found.");
+        }
+    }
 }
