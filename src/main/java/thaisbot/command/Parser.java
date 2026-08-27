@@ -12,6 +12,7 @@ import thaisbot.command.commands.AddTodoCommand;
 import thaisbot.command.commands.DeleteCommand;
 import thaisbot.command.commands.ExitCommand;
 import thaisbot.command.commands.FindOnDateCommand;
+import thaisbot.command.commands.FindCommand;
 import thaisbot.command.commands.ListCommand;
 import thaisbot.command.commands.MarkCommand;
 import thaisbot.command.commands.UnmarkCommand;
@@ -50,6 +51,8 @@ public class Parser {
                     "Please provide a task number to delete."));
         case "on":
             return new FindOnDateCommand(parseQueryDate(parts));
+        case "find":
+            return new FindCommand(parseFindQuery(parts));
         default:
             throw new ThaisBotException(
                     "I'm sorry, but I don't know what that means :( . Please try again!");
@@ -163,6 +166,13 @@ public class Parser {
             throw new ThaisBotException("Use: on <yyyy-MM-dd>");
         }
         return parseDate(parts[1].trim());
+    }
+
+    private String parseFindQuery(String[] parts) throws ThaisBotException {
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new ThaisBotException("Use: find <keyword>");
+        }
+        return parts[1].trim();
     }
 
     public static class ParsedDateTime {
