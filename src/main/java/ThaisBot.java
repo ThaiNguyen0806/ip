@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ThaisBot {
     private static final Path DATA_FILE = Paths.get("data", "tasks.txt");
@@ -23,30 +22,29 @@ public class ThaisBot {
     private static final String TASK_RANGE_ERROR = "Task number out of range.";
 
     public static void main(String[] args) {
-        System.out.println("Hello! I'm Thai's Bot.");
-        System.out.println("What can I do for you today :D?");
+        Ui ui = new Ui();
+        ui.showWelcome();
 
-        Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks;
+        TaskList tasks;
         try {
             tasks = loadTasks();
         } catch (ThaisBotException e) {
-            System.out.println("Error: " + e.getMessage());
-            tasks = new ArrayList<>();
+            ui.showError(e.getMessage());
+            tasks = new TaskList();
         }
 
-        while (scanner.hasNextLine()) {
-            String userInput = scanner.nextLine().trim();
+        while (true) {
+            String userInput = ui.readCommand();
 
             try {
                 String[] parts = userInput.split("\\s+", 2);
                 String command = parts[0];
 
                 if (command.equals("bye")) {
-                    System.out.println("Bye. Hope to see you again soon!");
+                    ui.showBye();
                     break;
                 } else if (command.equals("list")) {
-                    printTaskList(tasks);
+                    ui.showTaskList(tasks);
                 } else if (command.equals("mark")) {
                     if (parts.length < 2) {
                         throw new ThaisBotException("Please provide a task number to mark.");
@@ -55,8 +53,7 @@ public class ThaisBot {
                     Task task = tasks.get(taskNumber - 1);
                     task.markAsDone();
                     saveTasks(tasks);
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  " + task);
+                    ui.showTaskMarkedDone(task);
                 } else if (command.equals("unmark")) {
                     if (parts.length < 2) {
                         throw new ThaisBotException("Please provide a task number to unmark.");
@@ -65,8 +62,7 @@ public class ThaisBot {
                     Task task = tasks.get(taskNumber - 1);
                     task.unmarkAsDone();
                     saveTasks(tasks);
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println("  " + task);
+                    ui.showTaskMarkedNotDone(task);
                 } else if (command.equals("todo")) {
                     if (parts.length < 2 || parts[1].trim().isEmpty()) {
                         throw new ThaisBotException("The description of a todo cannot be empty.");
@@ -74,9 +70,7 @@ public class ThaisBot {
                     Task task = new Todo(parts[1]);
                     tasks.add(task);
                     saveTasks(tasks);
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + task);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showTaskAdded(task, tasks.size());
                 } else if (command.equals("deadline")) {
                     if (parts.length < 2) {
                         throw new ThaisBotException(
@@ -94,9 +88,7 @@ public class ThaisBot {
                     Task task = new Deadline(deadlineParts[0].trim(), by.value, by.hasTime);
                     tasks.add(task);
                     saveTasks(tasks);
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + task);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showTaskAdded(task, tasks.size());
                 } else if (command.equals("event")) {
                     if (parts.length < 2) {
                         throw new ThaisBotException(
@@ -121,15 +113,13 @@ public class ThaisBot {
                             to.value, to.hasTime);
                     tasks.add(task);
                     saveTasks(tasks);
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + task);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showTaskAdded(task, tasks.size());
                 } else if (command.equals("on")) {
                     if (parts.length < 2 || parts[1].trim().isEmpty()) {
                         throw new ThaisBotException("Use: on <yyyy-MM-dd>");
                     }
                     LocalDate date = parseDate(parts[1].trim());
-                    printTasksOnDate(tasks, date);
+                    ui.showTasksOnDate(tasks, date);
                 } else if (command.equals("delete")) {
                     if (parts.length < 2) {
                         throw new ThaisBotException("Please provide a task number to delete.");
@@ -137,20 +127,18 @@ public class ThaisBot {
                     int taskNumber = parseTaskNumber(parts[1], tasks.size());
                     Task removedTask = tasks.remove(taskNumber - 1);
                     saveTasks(tasks);
-                    System.out.println("Noted. I've removed this task:");
-                    System.out.println("  " + removedTask);
-                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showTaskRemoved(removedTask, tasks.size());
                 } else {
                     throw new ThaisBotException(
                             "I'm sorry, but I don't know what that means :( . Please try again!");
                 }
             } catch (ThaisBotException e) {
-                System.out.println("Error: " + e.getMessage());
+                ui.showError(e.getMessage());
             }
         }
     }
 
-    private static void saveTasks(ArrayList<Task> tasks) throws ThaisBotException {
+    private static void saveTasks(TaskList tasks) throws ThaisBotException {
         try {
             Files.createDirectories(DATA_FILE.getParent());
             List<String> lines = new ArrayList<>();
@@ -163,12 +151,12 @@ public class ThaisBot {
         }
     }
 
-    private static ArrayList<Task> loadTasks() throws ThaisBotException {
+    private static TaskList loadTasks() throws ThaisBotException {
         try {
             Files.createDirectories(DATA_FILE.getParent());
             if (!Files.exists(DATA_FILE)) {
                 Files.createFile(DATA_FILE);
-                return new ArrayList<>();
+                return new TaskList();
             }
             List<String> lines = Files.readAllLines(DATA_FILE);
             ArrayList<Task> tasks = new ArrayList<>();
@@ -179,7 +167,7 @@ public class ThaisBot {
                 }
                 tasks.add(parseTaskLine(line, i + 1));
             }
-            return tasks;
+            return new TaskList(tasks);
         } catch (IOException e) {
             throw new ThaisBotException("I couldn't load tasks from disk.");
         }
@@ -238,27 +226,6 @@ public class ThaisBot {
         }
 
         return task;
-    }
-
-    private static void printTaskList(ArrayList<Task> tasks) {
-        System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
-        }
-    }
-
-    private static void printTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
-        System.out.println("Here are the deadlines and events on " + date + ":");
-        int shownCount = 0;
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                shownCount++;
-                System.out.println(shownCount + "." + task);
-            }
-        }
-        if (shownCount == 0) {
-            System.out.println("No deadlines or events found on that date.");
-        }
     }
 
     private static int parseTaskNumber(String taskNumberText, int taskCount)
