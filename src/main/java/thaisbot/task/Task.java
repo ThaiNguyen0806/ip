@@ -7,8 +7,8 @@ import java.time.LocalDate;
  * such as todos, deadlines and events.
  */
 public class Task {
-    protected String description;
-    protected TaskStatus status;
+    private String description;
+    private TaskStatus status;
 
     /**
      * Create a new Task with the given description. Status defaults to NOT_DONE.
@@ -80,4 +80,13 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
+    /**
+     * Returns true if the task is marked done.
+     * @return true if done
+     */
+    public boolean isDone() {
+        return this.status == TaskStatus.DONE;
+    }
 }
+

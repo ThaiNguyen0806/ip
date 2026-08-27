@@ -19,7 +19,7 @@ public class Todo extends Task {
 
     @Override
     public String toFileString() {
-        String doneFlag = status == TaskStatus.DONE ? "1" : "0";
-        return "T | " + doneFlag + " | " + description;
+        String doneFlag = isDone() ? "1" : "0";
+        return "T | " + doneFlag + " | " + getDescription();
     }
 }

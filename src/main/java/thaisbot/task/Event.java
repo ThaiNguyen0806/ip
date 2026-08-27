@@ -41,8 +41,8 @@ public class Event extends Task {
 
     @Override
     public String toFileString() {
-        String doneFlag = status == TaskStatus.DONE ? "1" : "0";
-        return "E | " + doneFlag + " | " + description + " | "
+        String doneFlag = isDone() ? "1" : "0";
+        return "E | " + doneFlag + " | " + getDescription() + " | "
                 + from + " | " + toFlag(hasFromTime)
                 + " | " + to + " | " + toFlag(hasToTime);
     }
