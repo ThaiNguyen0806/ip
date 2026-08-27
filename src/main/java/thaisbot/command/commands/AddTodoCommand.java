@@ -8,9 +8,16 @@ import thaisbot.task.Task;
 import thaisbot.task.TaskList;
 import thaisbot.task.Todo;
 
+/**
+ * Command to add a todo task.
+ */
 public class AddTodoCommand extends Command {
     private final String description;
 
+    /**
+     * Construct an AddTodoCommand.
+     * @param description description of the todo
+     */
     public AddTodoCommand(String description) {
         this.description = description;
     }

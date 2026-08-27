@@ -1,6 +1,13 @@
 package thaisbot.task;
 
+/**
+ * A simple to-do task without associated dates.
+ */
 public class Todo extends Task {
+    /**
+     * Create a Todo with the given description.
+     * @param description task description
+     */
     public Todo(String description) {
         super(description);
     }

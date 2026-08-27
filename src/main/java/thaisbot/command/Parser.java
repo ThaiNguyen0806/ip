@@ -17,6 +17,10 @@ import thaisbot.command.commands.ListCommand;
 import thaisbot.command.commands.MarkCommand;
 import thaisbot.command.commands.UnmarkCommand;
 
+/**
+ * Parses user input into Command objects. Exposes helper parsing methods for the
+ * different argument types used by commands.
+ */
 public class Parser {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -25,6 +29,12 @@ public class Parser {
     private static final DateTimeFormatter DATE_TIME_COLON_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+    /**
+     * Parses a raw user input line and returns the corresponding Command.
+     * @param userInput raw input from the user
+     * @return parsed Command
+     * @throws ThaisBotException if the command or its arguments are invalid
+     */
     public Command parse(String userInput) throws ThaisBotException {
         String[] parts = userInput.trim().split("\\s+", 2);
         String commandWord = parts[0];
@@ -59,6 +69,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a task number text into an integer.
+     * @param taskNumberText the string containing the task number
+     * @return parsed integer task number
+     * @throws ThaisBotException if the text is not a valid integer
+     */
     public int parseTaskNumber(String taskNumberText) throws ThaisBotException {
         try {
             return Integer.parseInt(taskNumberText);
@@ -67,6 +83,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a date string in yyyy-MM-dd format.
+     * @param input date string
+     * @return LocalDate parsed from input
+     * @throws ThaisBotException if parsing fails
+     */
     public LocalDate parseDate(String input) throws ThaisBotException {
         try {
             return LocalDate.parse(input, DATE_FORMATTER);
@@ -75,6 +97,15 @@ public class Parser {
         }
     }
 
+    /**
+     * Attempts to parse a date/time string using several supported formats. Returns a
+     * ParsedDateTime which contains the parsed LocalDateTime and whether the original
+     * input had a time component.
+     * @param input input string
+     * @param errorMessage message to include in exception on failure
+     * @return ParsedDateTime with parsed value
+     * @throws ThaisBotException if none of the supported formats apply
+     */
     public ParsedDateTime parseDateTime(String input, String errorMessage)
             throws ThaisBotException {
         try {
@@ -99,6 +130,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses the two parts of a deadline command separated by " /by ".
+     */
     public String[] parseDeadlineParts(String input, String usageMessage) throws ThaisBotException {
         String[] parts = input.split(" /by ", 2);
         if (parts.length != 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
@@ -107,6 +141,9 @@ public class Parser {
         return parts;
     }
 
+    /**
+     * Parses an event command into description, from and to parts.
+     */
     public String[] parseEventParts(String input, String usageMessage) throws ThaisBotException {
         String[] parts = input.split(" /from | /to ", 3);
         if (parts.length != 3
@@ -118,6 +155,9 @@ public class Parser {
         return parts;
     }
 
+    /**
+     * Helper to parse an integer task number argument from the command parts.
+     */
     private int parseTaskNumberArgument(String[] parts, String missingNumberMessage)
             throws ThaisBotException {
         if (parts.length < 2) {
@@ -126,6 +166,9 @@ public class Parser {
         return parseTaskNumber(parts[1]);
     }
 
+    /**
+     * Helper to parse a todo description from command parts.
+     */
     private String parseTodoDescription(String[] parts) throws ThaisBotException {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new ThaisBotException("The description of a todo cannot be empty.");

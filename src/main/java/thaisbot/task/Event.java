@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * A task representing an event spanning a start and end time.
+ */
 public class Event extends Task {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("MMM d yyyy");
@@ -15,6 +18,9 @@ public class Event extends Task {
     private final LocalDateTime to;
     private final boolean hasToTime;
 
+    /**
+     * Constructs an Event.
+     */
     public Event(String description, LocalDateTime from, boolean hasFromTime,
                  LocalDateTime to, boolean hasToTime) {
         super(description);
@@ -48,6 +54,9 @@ public class Event extends Task {
         return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
 
+    /**
+     * Format a LocalDateTime for display taking into account whether a time part was present.
+     */
     private String formatDateTime(LocalDateTime value, boolean hasTimePart) {
         if (hasTimePart) {
             return value.format(DATE_TIME_FORMATTER);

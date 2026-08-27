@@ -17,15 +17,29 @@ import thaisbot.task.TaskList;
 import thaisbot.task.TaskStatus;
 import thaisbot.task.Todo;
 
+/**
+ * Responsible for loading and saving tasks to disk. The format is a simple pipe-separated
+ * text format understood by the application.
+ */
 public class Storage {
     private final Path dataFile;
     private final Parser parser;
 
+    /**
+     * Construct Storage for a given file path.
+     * @param filePath path to the tasks file
+     * @param parser parser instance used to interpret stored date/time values
+     */
     public Storage(String filePath, Parser parser) {
         dataFile = Paths.get(filePath);
         this.parser = parser;
     }
 
+    /**
+     * Loads tasks from disk. Creates parent directories and file if they do not exist.
+     * @return TaskList containing tasks loaded from disk
+     * @throws ThaisBotException if an I/O error occurs
+     */
     public TaskList load() throws ThaisBotException {
         try {
             Files.createDirectories(dataFile.getParent());
@@ -48,6 +62,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the provided TaskList to disk, overwriting the previous contents.
+     * @param tasks the tasks to save
+     * @throws ThaisBotException if an I/O error occurs during write
+     */
     public void save(TaskList tasks) throws ThaisBotException {
         try {
             Files.createDirectories(dataFile.getParent());
@@ -61,6 +80,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parse a single stored task line and return the corresponding Task instance.
+     * @param line the raw stored line
+     * @param lineNumber line number (for error reporting)
+     * @return the Task represented by the line
+     * @throws ThaisBotException if the stored data is malformed
+     */
     private Task parseTaskLine(String line, int lineNumber) throws ThaisBotException {
         String[] parts = line.split("\\s*\\|\\s*", -1);
         if (parts.length < 3) {
@@ -93,6 +119,9 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Parse a stored deadline task.
+     */
     private Task parseDeadlineTask(String[] parts, String description, int lineNumber)
             throws ThaisBotException {
         if (parts.length < 4) {
@@ -109,6 +138,9 @@ public class Storage {
         return new Deadline(description, by.getValue(), by.hasTime());
     }
 
+    /**
+     * Parse a stored event task.
+     */
     private Task parseEventTask(String[] parts, String description, int lineNumber)
             throws ThaisBotException {
         if (parts.length < 5) {
@@ -129,6 +161,10 @@ public class Storage {
         return new Event(description, from.getValue(), from.hasTime(), to.getValue(), to.hasTime());
     }
 
+    /**
+     * Parse a stored LocalDateTime string and an accompanying flag indicating whether the
+     * original representation included a time part.
+     */
     private Parser.ParsedDateTime parseStoredDateTimeWithFlag(String value, String flag,
                                                               int lineNumber)
             throws ThaisBotException {

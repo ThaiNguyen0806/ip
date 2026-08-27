@@ -7,9 +7,16 @@ import thaisbot.command.Command;
 import thaisbot.task.Task;
 import thaisbot.task.TaskList;
 
+/**
+ * Command to mark a task as not done.
+ */
 public class UnmarkCommand extends Command {
     private final int taskNumber;
 
+    /**
+     * Construct an UnmarkCommand.
+     * @param taskNumber 1-based index of the task to unmark
+     */
     public UnmarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }
