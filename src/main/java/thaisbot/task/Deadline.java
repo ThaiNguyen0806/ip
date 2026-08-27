@@ -35,8 +35,8 @@ public class Deadline extends Task {
 
     @Override
     public String toFileString() {
-        String doneFlag = status == TaskStatus.DONE ? "1" : "0";
-        return "D | " + doneFlag + " | " + description + " | " + by + " | " + toFlag(hasTime);
+        String doneFlag = isDone() ? "1" : "0";
+        return "D | " + doneFlag + " | " + getDescription() + " | " + by + " | " + toFlag(hasTime);
     }
 
     @Override
