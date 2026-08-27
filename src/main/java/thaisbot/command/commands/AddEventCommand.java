@@ -9,11 +9,17 @@ import thaisbot.task.Event;
 import thaisbot.task.Task;
 import thaisbot.task.TaskList;
 
+/**
+ * Command to add an event task.
+ */
 public class AddEventCommand extends Command {
     private final String description;
     private final Parser.ParsedDateTime from;
     private final Parser.ParsedDateTime to;
 
+    /**
+     * Construct an AddEventCommand.
+     */
     public AddEventCommand(String description, Parser.ParsedDateTime from, Parser.ParsedDateTime to) {
         this.description = description;
         this.from = from;

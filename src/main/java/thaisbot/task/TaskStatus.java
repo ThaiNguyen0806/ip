@@ -1,5 +1,8 @@
 package thaisbot.task;
 
+/**
+ * Enumeration representing the completion status of a task.
+ */
 public enum TaskStatus {
     DONE("X"),
     NOT_DONE(" ");
@@ -10,6 +13,10 @@ public enum TaskStatus {
         this.icon = icon;
     }
 
+    /**
+     * Returns the single-character icon used to display status.
+     * @return icon string
+     */
     public String getIcon() {
         return icon;
     }

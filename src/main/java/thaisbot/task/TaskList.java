@@ -4,29 +4,57 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Container for a mutable list of tasks. Provides convenience methods used by commands.
+ */
 public class TaskList implements Iterable<Task> {
     private final ArrayList<Task> tasks;
 
+    /**
+     * Create an empty TaskList.
+     */
     public TaskList() {
         tasks = new ArrayList<>();
     }
 
+    /**
+     * Create a TaskList from an existing list of tasks.
+     * @param tasks initial tasks
+     */
     public TaskList(List<Task> tasks) {
         this.tasks = new ArrayList<>(tasks);
     }
 
+    /**
+     * Add a task to the list.
+     * @param task task to add
+     */
     public void add(Task task) {
         tasks.add(task);
     }
 
+    /**
+     * Remove and return the task at the given index.
+     * @param index zero-based index
+     * @return removed task
+     */
     public Task remove(int index) {
         return tasks.remove(index);
     }
 
+    /**
+     * Get the task at the given index.
+     * @param index zero-based index
+     * @return task at index
+     */
     public Task get(int index) {
         return tasks.get(index);
     }
 
+    /**
+     * Current number of tasks in the list.
+     * @return size
+     */
     public int size() {
         return tasks.size();
     }

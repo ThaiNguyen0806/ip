@@ -7,9 +7,16 @@ import thaisbot.command.Command;
 import thaisbot.task.Task;
 import thaisbot.task.TaskList;
 
+/**
+ * Command to delete a task by its number.
+ */
 public class DeleteCommand extends Command {
     private final int taskNumber;
 
+    /**
+     * Construct a DeleteCommand.
+     * @param taskNumber 1-based task number
+     */
     public DeleteCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }

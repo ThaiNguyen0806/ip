@@ -9,10 +9,18 @@ import thaisbot.task.Deadline;
 import thaisbot.task.Task;
 import thaisbot.task.TaskList;
 
+/**
+ * Command to add a deadline task.
+ */
 public class AddDeadlineCommand extends Command {
     private final String description;
     private final Parser.ParsedDateTime by;
 
+    /**
+     * Construct an AddDeadlineCommand.
+     * @param description description text
+     * @param by parsed deadline date/time
+     */
     public AddDeadlineCommand(String description, Parser.ParsedDateTime by) {
         this.description = description;
         this.by = by;

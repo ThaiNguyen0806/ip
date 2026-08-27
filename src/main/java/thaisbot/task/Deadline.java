@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * A task that has a deadline (single point in time).
+ */
 public class Deadline extends Task {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("MMM d yyyy");
@@ -13,6 +16,12 @@ public class Deadline extends Task {
     private final LocalDateTime by;
     private final boolean hasTime;
 
+    /**
+     * Constructs a Deadline.
+     * @param description description text
+     * @param by the deadline date/time
+     * @param hasTime whether the original input included a time
+     */
     public Deadline(String description, LocalDateTime by, boolean hasTime) {
         super(description);
         this.by = by;
@@ -35,6 +44,9 @@ public class Deadline extends Task {
         return by.toLocalDate().equals(date);
     }
 
+    /**
+     * Formats the stored LocalDateTime for display.
+     */
     private String formatDateTime(LocalDateTime value, boolean hasTimePart) {
         if (hasTimePart) {
             return value.format(DATE_TIME_FORMATTER);
