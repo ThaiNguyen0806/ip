@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class Storage {
             if ("0".equals(flag)) {
                 return new Parser.ParsedDateTime(parsed, false);
             }
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             // Fall through to the uniform error below.
         }
         throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");

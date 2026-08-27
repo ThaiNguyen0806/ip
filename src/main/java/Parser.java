@@ -11,17 +11,41 @@ public class Parser {
     private static final DateTimeFormatter DATE_TIME_COLON_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public String[] splitUserInput(String userInput) {
-        return userInput.trim().split("\\s+", 2);
+    public Command parse(String userInput) throws ThaisBotException {
+        String[] parts = userInput.trim().split("\\s+", 2);
+        String commandWord = parts[0];
+
+        switch (commandWord) {
+        case "bye":
+            return new ExitCommand();
+        case "list":
+            return new ListCommand();
+        case "mark":
+            return new MarkCommand(parseTaskNumberArgument(parts,
+                    "Please provide a task number to mark."));
+        case "unmark":
+            return new UnmarkCommand(parseTaskNumberArgument(parts,
+                    "Please provide a task number to unmark."));
+        case "todo":
+            return new AddTodoCommand(parseTodoDescription(parts));
+        case "deadline":
+            return parseDeadlineCommand(parts);
+        case "event":
+            return parseEventCommand(parts);
+        case "delete":
+            return new DeleteCommand(parseTaskNumberArgument(parts,
+                    "Please provide a task number to delete."));
+        case "on":
+            return new FindOnDateCommand(parseQueryDate(parts));
+        default:
+            throw new ThaisBotException(
+                    "I'm sorry, but I don't know what that means :( . Please try again!");
+        }
     }
 
-    public int parseTaskNumber(String taskNumberText, int taskCount) throws ThaisBotException {
+    public int parseTaskNumber(String taskNumberText) throws ThaisBotException {
         try {
-            int taskNumber = Integer.parseInt(taskNumberText);
-            if (taskNumber < 1 || taskNumber > taskCount) {
-                throw new ThaisBotException("Task number out of range.");
-            }
-            return taskNumber;
+            return Integer.parseInt(taskNumberText);
         } catch (NumberFormatException e) {
             throw new ThaisBotException("Task number must be a valid integer.");
         }
@@ -76,6 +100,56 @@ public class Parser {
             throw new ThaisBotException(usageMessage);
         }
         return parts;
+    }
+
+    private int parseTaskNumberArgument(String[] parts, String missingNumberMessage)
+            throws ThaisBotException {
+        if (parts.length < 2) {
+            throw new ThaisBotException(missingNumberMessage);
+        }
+        return parseTaskNumber(parts[1]);
+    }
+
+    private String parseTodoDescription(String[] parts) throws ThaisBotException {
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new ThaisBotException("The description of a todo cannot be empty.");
+        }
+        return parts[1].trim();
+    }
+
+    private Command parseDeadlineCommand(String[] parts) throws ThaisBotException {
+        if (parts.length < 2) {
+            throw new ThaisBotException(
+                    "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm>");
+        }
+        String[] deadlineParts = parseDeadlineParts(parts[1],
+                "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm>");
+        ParsedDateTime by = parseDateTime(deadlineParts[1].trim(),
+                "Deadline date/time must be yyyy-MM-dd or yyyy-MM-dd HHmm.");
+        return new AddDeadlineCommand(deadlineParts[0].trim(), by);
+    }
+
+    private Command parseEventCommand(String[] parts) throws ThaisBotException {
+        if (parts.length < 2) {
+            throw new ThaisBotException("Use: event <description> /from <start> /to <end>.");
+        }
+        String[] eventParts = parseEventParts(parts[1],
+                "Use: event <description> /from <start> /to <end>.");
+        ParsedDateTime from = parseDateTime(eventParts[1].trim(),
+                "Event start must be yyyy-MM-dd or yyyy-MM-dd HHmm.");
+        ParsedDateTime to = parseDateTime(eventParts[2].trim(),
+                "Event end must be yyyy-MM-dd or yyyy-MM-dd HHmm.");
+        if (to.getValue().isBefore(from.getValue())) {
+            throw new ThaisBotException("Event end cannot be before event start.");
+        }
+        return new AddEventCommand(eventParts[0].trim(), from, to);
+    }
+
+    private LocalDate parseQueryDate(String[] parts) throws ThaisBotException {
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new ThaisBotException("Use: on <yyyy-MM-dd>");
+        }
+        return parseDate(parts[1].trim());
     }
 
     public static class ParsedDateTime {
