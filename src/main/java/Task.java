@@ -19,6 +19,15 @@ public class Task {
         return status.getIcon();
     }
 
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public String toFileString() {
+        String doneFlag = status == TaskStatus.DONE ? "1" : "0";
+        return "T | " + doneFlag + " | " + description;
+    }
+
     @Override
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
