@@ -1,3 +1,14 @@
+package thaisbot.command.commands;
+
+import thaisbot.Storage;
+import thaisbot.ThaisBotException;
+import thaisbot.Ui;
+import thaisbot.command.Command;
+import thaisbot.command.Parser;
+import thaisbot.task.Deadline;
+import thaisbot.task.Task;
+import thaisbot.task.TaskList;
+
 public class AddDeadlineCommand extends Command {
     private final String description;
     private final Parser.ParsedDateTime by;

@@ -1,5 +1,11 @@
+package thaisbot;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import thaisbot.command.Command;
+import thaisbot.command.Parser;
+import thaisbot.task.TaskList;
 
 public class ThaisBot {
     private static final Path DATA_FILE = Paths.get("data", "tasks.txt");

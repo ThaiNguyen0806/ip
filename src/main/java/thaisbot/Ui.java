@@ -1,5 +1,10 @@
+package thaisbot;
+
 import java.time.LocalDate;
 import java.util.Scanner;
+
+import thaisbot.task.Task;
+import thaisbot.task.TaskList;
 
 public class Ui {
     private final Scanner scanner;
