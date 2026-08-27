@@ -1,3 +1,12 @@
+package thaisbot.command.commands;
+
+import thaisbot.Storage;
+import thaisbot.ThaisBotException;
+import thaisbot.Ui;
+import thaisbot.command.Command;
+import thaisbot.task.Task;
+import thaisbot.task.TaskList;
+
 public class DeleteCommand extends Command {
     private final int taskNumber;
 

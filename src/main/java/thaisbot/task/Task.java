@@ -1,3 +1,5 @@
+package thaisbot.task;
+
 import java.time.LocalDate;
 
 public class Task {

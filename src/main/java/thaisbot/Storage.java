@@ -1,3 +1,5 @@
+package thaisbot;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -6,6 +8,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import thaisbot.command.Parser;
+import thaisbot.task.Deadline;
+import thaisbot.task.Event;
+import thaisbot.task.Task;
+import thaisbot.task.TaskList;
+import thaisbot.task.TaskStatus;
+import thaisbot.task.Todo;
 
 public class Storage {
     private final Path dataFile;
