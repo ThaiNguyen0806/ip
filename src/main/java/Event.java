@@ -1,21 +1,62 @@
-public class Event extends Task {
-    private String from;
-    private String to;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public Event(String description, String from, String to) {
+public class Event extends Task {
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("MMM d yyyy");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("MMM d yyyy HHmm");
+
+    private final LocalDateTime from;
+    private final boolean hasFromTime;
+    private final LocalDateTime to;
+    private final boolean hasToTime;
+
+    public Event(String description, LocalDateTime from, boolean hasFromTime,
+                 LocalDateTime to, boolean hasToTime) {
         super(description);
         this.from = from;
+        this.hasFromTime = hasFromTime;
         this.to = to;
+        this.hasToTime = hasToTime;
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: "
+                + formatDateTime(from, hasFromTime)
+                + " to: "
+                + formatDateTime(to, hasToTime)
+                + ")";
     }
 
     @Override
     public String toFileString() {
         String doneFlag = status == TaskStatus.DONE ? "1" : "0";
-        return "E | " + doneFlag + " | " + description + " | " + from + " | " + to;
+        return "E | " + doneFlag + " | " + description + " | "
+                + from + " | " + toFlag(hasFromTime)
+                + " | " + to + " | " + toFlag(hasToTime);
+    }
+
+    @Override
+    public boolean occursOn(LocalDate date) {
+        LocalDate startDate = from.toLocalDate();
+        LocalDate endDate = to.toLocalDate();
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
+    }
+
+    private String formatDateTime(LocalDateTime value, boolean hasTimePart) {
+        if (hasTimePart) {
+            return value.format(DATE_TIME_FORMATTER);
+        }
+        return value.format(DATE_FORMATTER);
+    }
+
+    private String toFlag(boolean value) {
+        if (value) {
+            return "1";
+        }
+        return "0";
     }
 }

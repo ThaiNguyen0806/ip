@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Task {
     protected String description;
     protected TaskStatus status;
@@ -26,6 +28,10 @@ public class Task {
     public String toFileString() {
         String doneFlag = status == TaskStatus.DONE ? "1" : "0";
         return "T | " + doneFlag + " | " + description;
+    }
+
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     @Override
