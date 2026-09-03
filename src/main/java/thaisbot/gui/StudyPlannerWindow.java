@@ -1,6 +1,5 @@
 package thaisbot.gui;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
@@ -48,10 +47,18 @@ public class StudyPlannerWindow extends BorderPane {
      * Adds multiple bot messages to the conversation.
      * @param messages messages to display
      */
-    public void appendMessages(List<String> messages) {
+    public void appendMessages(String... messages) {
         for (String message : messages) {
             appendBotMessage(message);
         }
+    }
+
+    /**
+     * Adds multiple bot messages from a list to the conversation.
+     * @param messages messages to display
+     */
+    public void appendMessages(java.util.List<String> messages) {
+        appendMessages(messages.toArray(new String[0]));
     }
 
     /**
