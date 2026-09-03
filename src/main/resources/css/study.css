@@ -1,0 +1,98 @@
+.root-pane {
+    -fx-background-color: linear-gradient(to bottom right, #eef3f8, #f8fbff);
+}
+
+.card {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(127, 150, 178, 0.18);
+    -fx-effect: dropshadow(gaussian, rgba(42, 66, 94, 0.14), 20, 0.2, 0, 6);
+}
+
+.header {
+    -fx-padding: 18 20 14 20;
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1f2f44;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #5d6f82;
+}
+
+.quick-actions {
+    -fx-padding: 8 0 0 0;
+}
+
+.quick-button {
+    -fx-background-color: linear-gradient(to bottom, #dfeaf7, #cddcee);
+    -fx-text-fill: #1f2f44;
+    -fx-background-radius: 16;
+    -fx-padding: 8 12 8 12;
+    -fx-font-weight: 600;
+}
+
+.quick-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #d6e4f4, #bdd0e7);
+}
+
+.chat-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 2 6 2 6;
+}
+
+.input-pane {
+    -fx-padding: 14 16 14 16;
+}
+
+.command-field {
+    -fx-background-color: #f7f9fc;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: #d6e0eb;
+    -fx-padding: 11 14 11 14;
+}
+
+.command-field:focused {
+    -fx-border-color: #86a8d1;
+    -fx-background-color: #ffffff;
+}
+
+.send-button {
+    -fx-background-color: linear-gradient(to bottom, #5f7ea8, #486384);
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-background-radius: 14;
+    -fx-padding: 10 18 10 18;
+}
+
+.send-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #6887b3, #557399);
+}
+
+.user-bubble {
+    -fx-background-color: linear-gradient(to bottom, #e5f0fb, #d9e8f7);
+    -fx-background-radius: 16;
+    -fx-padding: 10 14 10 14;
+    -fx-text-fill: #203045;
+}
+
+.bot-bubble {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16;
+    -fx-padding: 10 14 10 14;
+    -fx-text-fill: #203045;
+    -fx-effect: dropshadow(gaussian, rgba(42, 66, 94, 0.09), 12, 0.15, 0, 3);
+}
+
+.user-avatar,
+.bot-avatar {
+    -fx-font-size: 22px;
+}
