@@ -2,7 +2,6 @@ package thaisbot.gui;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,10 +41,10 @@ public class StudyPlannerApp extends Application {
 
         ui.showWelcome();
         window.appendMessages(ui.drainMessages());
-        window.appendMessages(List.of(
+        window.appendMessages(
                 "Try `todo read book` or `deadline return book /by 2026-09-10`.",
                 "You can also type `list`, `find book`, or `bye`."
-        ));
+        );
     }
 
     private TaskList loadTasks() {
