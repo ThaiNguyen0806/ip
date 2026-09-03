@@ -1,15 +1,17 @@
 package thaisbot.task;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
 public class TaskListTest {
     @Test
-    public void add_get_remove_size_behaviour() {
+    public void addGetRemoveSizeBehaviour() {
         TaskList list = new TaskList();
         Todo t1 = new Todo("one");
         Todo t2 = new Todo("two");
@@ -23,7 +25,7 @@ public class TaskListTest {
     }
 
     @Test
-    public void iterator_returns_all_tasks() {
+    public void iteratorReturnsAllTasks() {
         TaskList list = new TaskList();
         list.add(new Todo("a"));
         list.add(new Todo("b"));

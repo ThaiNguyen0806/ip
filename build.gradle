@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.gradleup.shadow' version '9.5.1'
+    id 'checkstyle'
 }
 
 java {
@@ -11,6 +12,19 @@ java {
 
 repositories {
     mavenCentral()
+}
+
+checkstyle {
+    toolVersion = '10.18.1'
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+}
+
+tasks.withType(Checkstyle).configureEach {
+    configDirectory = file("${rootDir}/config/checkstyle")
+    reports {
+        html.required = true
+        xml.required = false
+    }
 }
 
 dependencies {
