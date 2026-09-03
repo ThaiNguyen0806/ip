@@ -11,8 +11,8 @@ import thaisbot.command.commands.AddEventCommand;
 import thaisbot.command.commands.AddTodoCommand;
 import thaisbot.command.commands.DeleteCommand;
 import thaisbot.command.commands.ExitCommand;
-import thaisbot.command.commands.FindOnDateCommand;
 import thaisbot.command.commands.FindCommand;
+import thaisbot.command.commands.FindOnDateCommand;
 import thaisbot.command.commands.ListCommand;
 import thaisbot.command.commands.MarkCommand;
 import thaisbot.command.commands.UnmarkCommand;
@@ -40,32 +40,32 @@ public class Parser {
         String commandWord = parts[0];
 
         switch (commandWord) {
-        case "bye":
-            return new ExitCommand();
-        case "list":
-            return new ListCommand();
-        case "mark":
-            return new MarkCommand(parseTaskNumberArgument(parts,
-                    "Please provide a task number to mark."));
-        case "unmark":
-            return new UnmarkCommand(parseTaskNumberArgument(parts,
-                    "Please provide a task number to unmark."));
-        case "todo":
-            return new AddTodoCommand(parseTodoDescription(parts));
-        case "deadline":
-            return parseDeadlineCommand(parts);
-        case "event":
-            return parseEventCommand(parts);
-        case "delete":
-            return new DeleteCommand(parseTaskNumberArgument(parts,
-                    "Please provide a task number to delete."));
-        case "on":
-            return new FindOnDateCommand(parseQueryDate(parts));
-        case "find":
-            return new FindCommand(parseFindQuery(parts));
-        default:
-            throw new ThaisBotException(
-                    "I'm sorry, but I don't know what that means :( . Please try again!");
+            case "bye":
+                return new ExitCommand();
+            case "list":
+                return new ListCommand();
+            case "mark":
+                return new MarkCommand(parseTaskNumberArgument(parts,
+                        "Please provide a task number to mark."));
+            case "unmark":
+                return new UnmarkCommand(parseTaskNumberArgument(parts,
+                        "Please provide a task number to unmark."));
+            case "todo":
+                return new AddTodoCommand(parseTodoDescription(parts));
+            case "deadline":
+                return parseDeadlineCommand(parts);
+            case "event":
+                return parseEventCommand(parts);
+            case "delete":
+                return new DeleteCommand(parseTaskNumberArgument(parts,
+                        "Please provide a task number to delete."));
+            case "on":
+                return new FindOnDateCommand(parseQueryDate(parts));
+            case "find":
+                return new FindCommand(parseFindQuery(parts));
+            default:
+                throw new ThaisBotException(
+                        "I'm sorry, but I don't know what that means :( . Please try again!");
         }
     }
 
@@ -218,19 +218,35 @@ public class Parser {
         return parts[1].trim();
     }
 
+    /**
+     * Holder for a parsed date/time and whether the original input included a time component.
+     */
     public static class ParsedDateTime {
         private final LocalDateTime value;
         private final boolean hasTime;
 
+        /**
+         * Creates a parsed date/time value.
+         * @param value parsed LocalDateTime
+         * @param hasTime true if the original input had a time component
+         */
         public ParsedDateTime(LocalDateTime value, boolean hasTime) {
             this.value = value;
             this.hasTime = hasTime;
         }
 
+        /**
+         * Returns the parsed date/time.
+         * @return parsed date/time
+         */
         public LocalDateTime getValue() {
             return value;
         }
 
+        /**
+         * Returns whether the original input included a time component.
+         * @return true if the original input included a time component
+         */
         public boolean hasTime() {
             return hasTime;
         }
