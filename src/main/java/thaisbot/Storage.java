@@ -6,8 +6,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import thaisbot.command.Parser;
 import thaisbot.task.Deadline;
@@ -53,14 +55,13 @@ public class Storage {
             }
 
             List<String> lines = Files.readAllLines(dataFile);
-            ArrayList<Task> tasks = new ArrayList<>();
-            for (int i = 0; i < lines.size(); i++) {
-                String line = lines.get(i).trim();
-                if (!line.isEmpty()) {
-                    tasks.add(parseTaskLine(line, i + 1));
-                }
-            }
+            List<Task> tasks = IntStream.range(0, lines.size())
+                    .mapToObj(i -> parseTaskLineIfPresent(lines.get(i), i + 1))
+                    .flatMap(Optional::stream)
+                    .collect(Collectors.toList());
             return new TaskList(tasks);
+        } catch (TaskDataParseException e) {
+            throw e.getCauseException();
         } catch (IOException e) {
             throw new ThaisBotException("I couldn't load tasks from disk.");
         }
@@ -74,10 +75,9 @@ public class Storage {
     public void save(TaskList tasks) throws ThaisBotException {
         try {
             Files.createDirectories(dataFile.getParent());
-            List<String> lines = new ArrayList<>();
-            for (Task task : tasks) {
-                lines.add(task.toFileString());
-            }
+            List<String> lines = tasks.stream()
+                    .map(Task::toFileString)
+                    .collect(Collectors.toList());
             Files.write(dataFile, lines);
         } catch (IOException e) {
             throw new ThaisBotException("I couldn't save your tasks to disk.");
@@ -121,6 +121,18 @@ public class Storage {
         }
 
         return task;
+    }
+
+    private Optional<Task> parseTaskLineIfPresent(String rawLine, int lineNumber) {
+        String line = rawLine.trim();
+        if (line.isEmpty()) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(parseTaskLine(line, lineNumber));
+        } catch (ThaisBotException e) {
+            throw new TaskDataParseException(e);
+        }
     }
 
     /**
@@ -192,5 +204,18 @@ public class Storage {
 
     private String corruptedTaskDataMessage(int lineNumber) {
         return CORRUPTED_DATA_MESSAGE_PREFIX + lineNumber + ".";
+    }
+
+    private static class TaskDataParseException extends RuntimeException {
+        private final ThaisBotException causeException;
+
+        TaskDataParseException(ThaisBotException causeException) {
+            super(causeException);
+            this.causeException = causeException;
+        }
+
+        ThaisBotException getCauseException() {
+            return causeException;
+        }
     }
 }

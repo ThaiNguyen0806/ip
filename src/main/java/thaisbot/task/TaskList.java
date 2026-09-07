@@ -3,6 +3,7 @@ package thaisbot.task;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Container for a mutable list of tasks. Provides convenience methods used by commands.
@@ -59,6 +60,14 @@ public class TaskList implements Iterable<Task> {
      */
     public int size() {
         return tasks.size();
+    }
+
+    /**
+     * Returns a sequential stream over the tasks.
+     * @return stream of tasks
+     */
+    public Stream<Task> stream() {
+        return tasks.stream();
     }
 
     @Override
