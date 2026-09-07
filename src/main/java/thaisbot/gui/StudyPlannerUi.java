@@ -3,6 +3,9 @@ package thaisbot.gui;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 import thaisbot.Ui;
 import thaisbot.task.Task;
@@ -45,9 +48,9 @@ public class StudyPlannerUi extends Ui {
     @Override
     public void showTaskList(TaskList tasks) {
         addMessages("Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            addMessages((i + 1) + "." + tasks.get(i));
-        }
+        IntStream.range(0, tasks.size())
+                .mapToObj(i -> (i + 1) + "." + tasks.get(i))
+                .forEach(this::addMessage);
     }
 
     @Override
@@ -83,14 +86,11 @@ public class StudyPlannerUi extends Ui {
     @Override
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
         addMessages("Here are the deadlines and events on " + date + ":");
-        int shownCount = 0;
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                shownCount++;
-                addMessages(shownCount + "." + task);
-            }
-        }
-        if (shownCount == 0) {
+        AtomicInteger shownCount = new AtomicInteger();
+        StreamSupport.stream(tasks.spliterator(), false)
+                .filter(task -> task.occursOn(date))
+                .forEach(task -> addMessage(shownCount.incrementAndGet() + "." + task));
+        if (shownCount.get() == 0) {
             addMessages("No deadlines or events found on that date.");
         }
     }
@@ -98,14 +98,11 @@ public class StudyPlannerUi extends Ui {
     @Override
     public void showMatchingTasks(TaskList tasks, String keyword) {
         addMessages("Here are the matching tasks in your list:");
-        int shownCount = 0;
-        for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
-                shownCount++;
-                addMessages(shownCount + "." + task);
-            }
-        }
-        if (shownCount == 0) {
+        AtomicInteger shownCount = new AtomicInteger();
+        StreamSupport.stream(tasks.spliterator(), false)
+                .filter(task -> task.getDescription().contains(keyword))
+                .forEach(task -> addMessage(shownCount.incrementAndGet() + "." + task));
+        if (shownCount.get() == 0) {
             addMessages("No matching tasks found.");
         }
     }
