@@ -22,6 +22,8 @@ import thaisbot.task.Todo;
  * text format understood by the application.
  */
 public class Storage {
+    private static final String CORRUPTED_DATA_MESSAGE_PREFIX = "Saved task data is corrupted at line ";
+
     private final Path dataFile;
     private final Parser parser;
 
@@ -92,7 +94,7 @@ public class Storage {
     private Task parseTaskLine(String line, int lineNumber) throws ThaisBotException {
         String[] parts = line.split("\\s*\\|\\s*", -1);
         if (parts.length < 3) {
-            throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");
+            throw corruptedTaskDataException(lineNumber);
         }
 
         String taskType = parts[0];
@@ -107,7 +109,7 @@ public class Storage {
         } else if ("E".equals(taskType)) {
             task = parseEventTask(parts, description, lineNumber);
         } else {
-            throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");
+            throw corruptedTaskDataException(lineNumber);
         }
 
         if ("1".equals(statusFlag)) {
@@ -115,7 +117,7 @@ public class Storage {
         } else if ("0".equals(statusFlag)) {
             task.setStatus(TaskStatus.NOT_DONE);
         } else {
-            throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");
+            throw corruptedTaskDataException(lineNumber);
         }
 
         return task;
@@ -127,7 +129,7 @@ public class Storage {
     private Task parseDeadlineTask(String[] parts, String description, int lineNumber)
             throws ThaisBotException {
         if (parts.length < 4) {
-            throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");
+            throw corruptedTaskDataException(lineNumber);
         }
 
         Parser.ParsedDateTime by;
@@ -135,7 +137,7 @@ public class Storage {
             by = parseStoredDateTimeWithFlag(parts[3], parts[4], lineNumber);
         } else {
             by = parser.parseDateTime(parts[3],
-                    "Saved task data is corrupted at line " + lineNumber + ".");
+                    corruptedTaskDataMessage(lineNumber));
         }
         return new Deadline(description, by.getValue(), by.hasTime());
     }
@@ -146,7 +148,7 @@ public class Storage {
     private Task parseEventTask(String[] parts, String description, int lineNumber)
             throws ThaisBotException {
         if (parts.length < 5) {
-            throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");
+            throw corruptedTaskDataException(lineNumber);
         }
 
         Parser.ParsedDateTime from;
@@ -156,9 +158,9 @@ public class Storage {
             to = parseStoredDateTimeWithFlag(parts[5], parts[6], lineNumber);
         } else {
             from = parser.parseDateTime(parts[3],
-                    "Saved task data is corrupted at line " + lineNumber + ".");
+                    corruptedTaskDataMessage(lineNumber));
             to = parser.parseDateTime(parts[4],
-                    "Saved task data is corrupted at line " + lineNumber + ".");
+                    corruptedTaskDataMessage(lineNumber));
         }
         return new Event(description, from.getValue(), from.hasTime(), to.getValue(), to.hasTime());
     }
@@ -181,6 +183,14 @@ public class Storage {
         } catch (DateTimeParseException e) {
             // Fall through to the uniform error below.
         }
-        throw new ThaisBotException("Saved task data is corrupted at line " + lineNumber + ".");
+        throw corruptedTaskDataException(lineNumber);
+    }
+
+    private ThaisBotException corruptedTaskDataException(int lineNumber) {
+        return new ThaisBotException(corruptedTaskDataMessage(lineNumber));
+    }
+
+    private String corruptedTaskDataMessage(int lineNumber) {
+        return CORRUPTED_DATA_MESSAGE_PREFIX + lineNumber + ".";
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
  * Container for a mutable list of tasks. Provides convenience methods used by commands.
  */
 public class TaskList implements Iterable<Task> {
-    private final ArrayList<Task> tasks;
+    private final List<Task> tasks;
 
     /**
      * Create an empty TaskList.
