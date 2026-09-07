@@ -100,7 +100,7 @@ public class StudyPlannerUi extends Ui {
         addMessages("Here are the matching tasks in your list:");
         AtomicInteger shownCount = new AtomicInteger();
         StreamSupport.stream(tasks.spliterator(), false)
-                .filter(task -> task.getDescription().contains(keyword))
+                .filter(task -> task.matchesSearch(keyword))
                 .forEach(task -> addMessage(shownCount.incrementAndGet() + "." + task));
         if (shownCount.get() == 0) {
             addMessages("No matching tasks found.");

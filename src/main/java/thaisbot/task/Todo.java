@@ -20,6 +20,6 @@ public class Todo extends Task {
     @Override
     public String toFileString() {
         String doneFlag = isDone() ? "1" : "0";
-        return "T | " + doneFlag + " | " + getDescription();
+        return "T | " + doneFlag + " | " + getDescription() + formatTagsForStorage();
     }
 }

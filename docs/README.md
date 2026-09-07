@@ -20,6 +20,12 @@ Example: `keyword (optional arguments)`
 expected output
 ```
 
+## Tagging items
+
+Add tags inline using `#tag` after the task text, for example `todo read book #fun #school`.
+
+Tags are shown in `list` output and are saved with the task.
+
 ## Feature ABC
 
 // Feature details

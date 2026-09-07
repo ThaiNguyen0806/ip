@@ -130,7 +130,7 @@ public class Ui {
         System.out.println("Here are the matching tasks in your list:");
         int shownCount = 0;
         for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
+            if (task.matchesSearch(keyword)) {
                 shownCount++;
                 System.out.println(shownCount + "." + task);
             }
