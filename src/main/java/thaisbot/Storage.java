@@ -31,6 +31,8 @@ public class Storage {
      * @param parser parser instance used to interpret stored date/time values
      */
     public Storage(String filePath, Parser parser) {
+        assert filePath != null;
+        assert parser != null;
         dataFile = Paths.get(filePath);
         this.parser = parser;
     }

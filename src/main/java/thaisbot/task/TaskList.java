@@ -22,6 +22,7 @@ public class TaskList implements Iterable<Task> {
      * @param tasks initial tasks
      */
     public TaskList(List<Task> tasks) {
+        assert tasks != null;
         this.tasks = new ArrayList<>(tasks);
     }
 
@@ -30,6 +31,7 @@ public class TaskList implements Iterable<Task> {
      * @param task task to add
      */
     public void add(Task task) {
+        assert task != null;
         tasks.add(task);
     }
 

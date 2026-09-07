@@ -28,6 +28,7 @@ public class StudyPlannerApp extends Application {
 
     @Override
     public void start(Stage stage) {
+        assert stage != null;
         tasks = loadTasks();
         window = new StudyPlannerWindow(this::handleCommand);
 
@@ -57,6 +58,8 @@ public class StudyPlannerApp extends Application {
     }
 
     private void handleCommand(String userInput) {
+        assert tasks != null;
+        assert window != null;
         try {
             Command command = parser.parse(userInput);
             command.execute(tasks, ui, storage);

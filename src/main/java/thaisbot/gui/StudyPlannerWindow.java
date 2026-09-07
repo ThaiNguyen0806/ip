@@ -35,6 +35,7 @@ public class StudyPlannerWindow extends BorderPane {
      * @param commandHandler handler called when the user submits a command
      */
     public StudyPlannerWindow(Consumer<String> commandHandler) {
+        assert commandHandler != null;
         this.commandHandler = commandHandler;
         setPadding(new Insets(20));
         setTop(createHeader());
@@ -48,6 +49,7 @@ public class StudyPlannerWindow extends BorderPane {
      * @param messages messages to display
      */
     public void appendMessages(String... messages) {
+        assert messages != null;
         for (String message : messages) {
             appendBotMessage(message);
         }
@@ -58,6 +60,7 @@ public class StudyPlannerWindow extends BorderPane {
      * @param messages messages to display
      */
     public void appendMessages(java.util.List<String> messages) {
+        assert messages != null;
         appendMessages(messages.toArray(new String[0]));
     }
 
