@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * such as todos, deadlines and events.
  */
 public class Task {
-    private String description;
+    private final String description;
     private TaskStatus status;
 
     /**
@@ -89,4 +89,3 @@ public class Task {
         return this.status == TaskStatus.DONE;
     }
 }
-
