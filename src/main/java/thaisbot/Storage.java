@@ -7,9 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import thaisbot.command.Parser;
 import thaisbot.task.Deadline;
@@ -55,13 +53,14 @@ public class Storage {
             }
 
             List<String> lines = Files.readAllLines(dataFile);
-            List<Task> tasks = IntStream.range(0, lines.size())
-                    .mapToObj(i -> parseTaskLineIfPresent(lines.get(i), i + 1))
-                    .flatMap(Optional::stream)
-                    .collect(Collectors.toList());
+            List<Task> tasks = new java.util.ArrayList<>();
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i).trim();
+                if (!line.isEmpty()) {
+                    tasks.add(parseTaskLine(line, i + 1));
+                }
+            }
             return new TaskList(tasks);
-        } catch (TaskDataParseException e) {
-            throw e.getCauseException();
         } catch (IOException e) {
             throw new ThaisBotException("I couldn't load tasks from disk.");
         }
@@ -120,19 +119,9 @@ public class Storage {
             throw corruptedTaskDataException(lineNumber);
         }
 
-        return task;
-    }
+        task.addTags(parseStoredTags(parts, getTagStartIndex(taskType), lineNumber));
 
-    private Optional<Task> parseTaskLineIfPresent(String rawLine, int lineNumber) {
-        String line = rawLine.trim();
-        if (line.isEmpty()) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of(parseTaskLine(line, lineNumber));
-        } catch (ThaisBotException e) {
-            throw new TaskDataParseException(e);
-        }
+        return task;
     }
 
     /**
@@ -206,16 +195,32 @@ public class Storage {
         return CORRUPTED_DATA_MESSAGE_PREFIX + lineNumber + ".";
     }
 
-    private static class TaskDataParseException extends RuntimeException {
-        private final ThaisBotException causeException;
-
-        TaskDataParseException(ThaisBotException causeException) {
-            super(causeException);
-            this.causeException = causeException;
+    private int getTagStartIndex(String taskType) {
+        if ("T".equals(taskType)) {
+            return 3;
         }
-
-        ThaisBotException getCauseException() {
-            return causeException;
+        if ("D".equals(taskType)) {
+            return 5;
         }
+        return 7;
+    }
+
+    private List<String> parseStoredTags(String[] parts, int startIndex, int lineNumber)
+            throws ThaisBotException {
+        List<String> tags = new java.util.ArrayList<>();
+        for (int i = startIndex; i < parts.length; i++) {
+            String part = parts[i].trim();
+            if (!part.startsWith("#") || part.length() == 1) {
+                throw corruptedTaskDataException(lineNumber);
+            }
+            String tag = part.substring(1);
+            if (!tag.matches("[A-Za-z0-9]+")) {
+                throw corruptedTaskDataException(lineNumber);
+            }
+            if (!tags.contains(tag)) {
+                tags.add(tag);
+            }
+        }
+        return tags;
     }
 }

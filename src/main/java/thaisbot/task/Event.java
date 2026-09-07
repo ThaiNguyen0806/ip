@@ -32,11 +32,11 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: "
+        return "[E][" + getStatusIcon() + "] " + getDescription() + " (from: "
                 + formatDateTime(from, hasFromTime)
                 + " to: "
                 + formatDateTime(to, hasToTime)
-                + ")";
+                + ")" + formatTags();
     }
 
     @Override
@@ -44,7 +44,8 @@ public class Event extends Task {
         String doneFlag = isDone() ? "1" : "0";
         return "E | " + doneFlag + " | " + getDescription() + " | "
                 + from + " | " + toFlag(hasFromTime)
-                + " | " + to + " | " + toFlag(hasToTime);
+                + " | " + to + " | " + toFlag(hasToTime)
+                + formatTagsForStorage();
     }
 
     @Override

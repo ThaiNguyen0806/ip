@@ -30,13 +30,15 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + formatDateTime(by, hasTime) + ")";
+        return "[D][" + getStatusIcon() + "] " + getDescription()
+                + " (by: " + formatDateTime(by, hasTime) + ")" + formatTags();
     }
 
     @Override
     public String toFileString() {
         String doneFlag = isDone() ? "1" : "0";
-        return "D | " + doneFlag + " | " + getDescription() + " | " + by + " | " + toFlag(hasTime);
+        return "D | " + doneFlag + " | " + getDescription() + " | " + by + " | " + toFlag(hasTime)
+                + formatTagsForStorage();
     }
 
     @Override

@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import thaisbot.ThaisBotException;
 import thaisbot.command.commands.AddDeadlineCommand;
@@ -28,6 +31,8 @@ public class Parser {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter DATE_TIME_COLON_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final String TAGS_HELP_MESSAGE =
+            "Tags must use # followed by letters or numbers only.";
 
     /**
      * Parses a raw user input line and returns the corresponding Command.
@@ -51,7 +56,9 @@ public class Parser {
                 return new UnmarkCommand(parseTaskNumberArgument(parts,
                         "Please provide a task number to unmark."));
             case "todo":
-                return new AddTodoCommand(parseTodoDescription(parts));
+                ParsedTaggedText todo = parseTaggedText(parts[1],
+                        "Use: todo <description> [#tag ...]");
+                return new AddTodoCommand(todo.getText(), todo.getTags());
             case "deadline":
                 return parseDeadlineCommand(parts);
             case "event":
@@ -166,42 +173,34 @@ public class Parser {
         return parseTaskNumber(parts[1]);
     }
 
-    /**
-     * Helper to parse a todo description from command parts.
-     */
-    private String parseTodoDescription(String[] parts) throws ThaisBotException {
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new ThaisBotException("The description of a todo cannot be empty.");
-        }
-        return parts[1].trim();
-    }
-
     private Command parseDeadlineCommand(String[] parts) throws ThaisBotException {
         if (parts.length < 2) {
             throw new ThaisBotException(
-                    "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm>");
+                    "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm> [#tag ...]");
         }
         String[] deadlineParts = parseDeadlineParts(parts[1],
-                "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm>");
-        ParsedDateTime by = parseDateTime(deadlineParts[1].trim(),
-                "Deadline date/time must be yyyy-MM-dd or yyyy-MM-dd HHmm.");
-        return new AddDeadlineCommand(deadlineParts[0].trim(), by);
+                "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm> [#tag ...]");
+        ParsedDateTimeAndTags by = parseDateTimeAndTags(deadlineParts[1].trim(),
+                "Deadline date/time must be yyyy-MM-dd or yyyy-MM-dd HHmm.",
+                "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm> [#tag ...]");
+        return new AddDeadlineCommand(deadlineParts[0].trim(), by.getDateTime(), by.getTags());
     }
 
     private Command parseEventCommand(String[] parts) throws ThaisBotException {
         if (parts.length < 2) {
-            throw new ThaisBotException("Use: event <description> /from <start> /to <end>.");
+            throw new ThaisBotException("Use: event <description> /from <start> /to <end> [#tag ...].");
         }
         String[] eventParts = parseEventParts(parts[1],
-                "Use: event <description> /from <start> /to <end>.");
+                "Use: event <description> /from <start> /to <end> [#tag ...].");
         ParsedDateTime from = parseDateTime(eventParts[1].trim(),
                 "Event start must be yyyy-MM-dd or yyyy-MM-dd HHmm.");
-        ParsedDateTime to = parseDateTime(eventParts[2].trim(),
-                "Event end must be yyyy-MM-dd or yyyy-MM-dd HHmm.");
-        if (to.getValue().isBefore(from.getValue())) {
+        ParsedDateTimeAndTags to = parseDateTimeAndTags(eventParts[2].trim(),
+                "Event end must be yyyy-MM-dd or yyyy-MM-dd HHmm.",
+                "Use: event <description> /from <start> /to <end> [#tag ...].");
+        if (to.getDateTime().getValue().isBefore(from.getValue())) {
             throw new ThaisBotException("Event end cannot be before event start.");
         }
-        return new AddEventCommand(eventParts[0].trim(), from, to);
+        return new AddEventCommand(eventParts[0].trim(), from, to.getDateTime(), to.getTags());
     }
 
     private LocalDate parseQueryDate(String[] parts) throws ThaisBotException {
@@ -216,6 +215,77 @@ public class Parser {
             throw new ThaisBotException("Use: find <keyword>");
         }
         return parts[1].trim();
+    }
+
+    private ParsedTaggedText parseTaggedText(String input, String usageMessage)
+            throws ThaisBotException {
+        String[] tokens = input.trim().split("\\s+");
+        int tagStart = findFirstTagIndex(tokens);
+        if (tagStart == 0) {
+            throw new ThaisBotException(usageMessage);
+        }
+        String text = joinTokens(tokens, 0, tagStart);
+        List<String> tags = parseTags(tokens, tagStart, usageMessage);
+        if (text.isEmpty()) {
+            throw new ThaisBotException(usageMessage);
+        }
+        return new ParsedTaggedText(text, tags);
+    }
+
+    private ParsedDateTimeAndTags parseDateTimeAndTags(String input, String errorMessage,
+                                                       String usageMessage)
+            throws ThaisBotException {
+        String[] tokens = input.trim().split("\\s+");
+        int tagStart = findFirstTagIndex(tokens);
+        if (tagStart == 0) {
+            throw new ThaisBotException(usageMessage);
+        }
+        String dateText = joinTokens(tokens, 0, tagStart);
+        List<String> tags = parseTags(tokens, tagStart, usageMessage);
+        if (dateText.isEmpty()) {
+            throw new ThaisBotException(usageMessage);
+        }
+        return new ParsedDateTimeAndTags(parseDateTime(dateText, errorMessage), tags);
+    }
+
+    private int findFirstTagIndex(String[] tokens) {
+        for (int i = 0; i < tokens.length; i++) {
+            if (tokens[i].startsWith("#")) {
+                return i;
+            }
+        }
+        return tokens.length;
+    }
+
+    private List<String> parseTags(String[] tokens, int startIndex, String usageMessage)
+            throws ThaisBotException {
+        LinkedHashSet<String> tags = new LinkedHashSet<>();
+        for (int i = startIndex; i < tokens.length; i++) {
+            String token = tokens[i];
+            if (!token.startsWith("#") || token.length() == 1) {
+                throw new ThaisBotException(TAGS_HELP_MESSAGE + " " + usageMessage);
+            }
+            String tag = token.substring(1);
+            if (!tag.matches("[A-Za-z0-9]+")) {
+                throw new ThaisBotException(TAGS_HELP_MESSAGE + " " + usageMessage);
+            }
+            tags.add(tag);
+        }
+        return new ArrayList<>(tags);
+    }
+
+    private String joinTokens(String[] tokens, int startInclusive, int endExclusive) {
+        if (startInclusive >= endExclusive) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = startInclusive; i < endExclusive; i++) {
+            if (builder.length() > 0) {
+                builder.append(' ');
+            }
+            builder.append(tokens[i]);
+        }
+        return builder.toString();
     }
 
     /**
@@ -249,6 +319,74 @@ public class Parser {
          */
         public boolean hasTime() {
             return hasTime;
+        }
+    }
+
+    /**
+     * Holder for parsed text and its tags.
+     */
+    public static class ParsedTaggedText {
+        private final String text;
+        private final List<String> tags;
+
+        /**
+         * Creates parsed text and tags.
+         * @param text text value
+         * @param tags tags
+         */
+        public ParsedTaggedText(String text, List<String> tags) {
+            this.text = text;
+            this.tags = List.copyOf(tags);
+        }
+
+        /**
+         * Returns the text portion.
+         * @return text
+         */
+        public String getText() {
+            return text;
+        }
+
+        /**
+         * Returns the parsed tags.
+         * @return tags
+         */
+        public List<String> getTags() {
+            return tags;
+        }
+    }
+
+    /**
+     * Holder for a parsed date/time and its tags.
+     */
+    public static class ParsedDateTimeAndTags {
+        private final ParsedDateTime dateTime;
+        private final List<String> tags;
+
+        /**
+         * Creates parsed date/time and tags.
+         * @param dateTime parsed date/time
+         * @param tags tags
+         */
+        public ParsedDateTimeAndTags(ParsedDateTime dateTime, List<String> tags) {
+            this.dateTime = dateTime;
+            this.tags = List.copyOf(tags);
+        }
+
+        /**
+         * Returns the parsed date/time.
+         * @return parsed date/time
+         */
+        public ParsedDateTime getDateTime() {
+            return dateTime;
+        }
+
+        /**
+         * Returns the parsed tags.
+         * @return tags
+         */
+        public List<String> getTags() {
+            return tags;
         }
     }
 }
