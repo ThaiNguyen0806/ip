@@ -31,23 +31,23 @@ public class StudyPlannerUi extends Ui {
 
     @Override
     public void showWelcome() {
-        addMessages("Hello! I'm Thai's Bot.",
-                "What can I do for you today?");
+        addMessages("Hello! I'm Thai's Bot. Let's make the chaos manageable.",
+                "Bring me tasks, deadlines, events, and tags.");
     }
 
     @Override
     public void showBye() {
-        addMessages("Bye. Hope to see you again soon!");
+        addMessages("All done for now. Come back whenever the stack grows.");
     }
 
     @Override
     public void showError(String message) {
-        addMessages("Error: " + message);
+        addMessages("Oops — Thai's Bot got tangled up: " + message);
     }
 
     @Override
     public void showTaskList(TaskList tasks) {
-        addMessages("Here are the tasks in your list:");
+        addMessages("Here's your task lineup:");
         IntStream.range(0, tasks.size())
                 .mapToObj(i -> (i + 1) + "." + tasks.get(i))
                 .forEach(this::addMessage);
@@ -56,7 +56,7 @@ public class StudyPlannerUi extends Ui {
     @Override
     public void showTaskAdded(Task task, int taskCount) {
         addMessages(
-                "Got it. I've added this task:",
+                "Nice! I've tucked this one into the lineup:",
                 "  " + task,
                 "Now you have " + taskCount + " tasks in the list."
         );
@@ -64,20 +64,20 @@ public class StudyPlannerUi extends Ui {
 
     @Override
     public void showTaskMarkedDone(Task task) {
-        addMessages("Nice! I've marked this task as done:",
+        addMessages("Great job. This task is officially done:",
                 "  " + task);
     }
 
     @Override
     public void showTaskMarkedNotDone(Task task) {
-        addMessages("OK, I've marked this task as not done yet:",
+        addMessages("No worries. I've put this one back on the list:",
                 "  " + task);
     }
 
     @Override
     public void showTaskRemoved(Task task, int taskCount) {
         addMessages(
-                "Noted. I've removed this task:",
+                "Out it goes:",
                 "  " + task,
                 "Now you have " + taskCount + " tasks in the list."
         );
@@ -85,7 +85,7 @@ public class StudyPlannerUi extends Ui {
 
     @Override
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
-        addMessages("Here are the deadlines and events on " + date + ":");
+        addMessages("Let's check what's on " + date + ":");
         AtomicInteger shownCount = new AtomicInteger();
         StreamSupport.stream(tasks.spliterator(), false)
                 .filter(task -> task.occursOn(date))
@@ -97,7 +97,7 @@ public class StudyPlannerUi extends Ui {
 
     @Override
     public void showMatchingTasks(TaskList tasks, String keyword) {
-        addMessages("Here are the matching tasks in your list:");
+        addMessages("Here are the matches I found:");
         AtomicInteger shownCount = new AtomicInteger();
         StreamSupport.stream(tasks.spliterator(), false)
                 .filter(task -> task.matchesSearch(keyword))

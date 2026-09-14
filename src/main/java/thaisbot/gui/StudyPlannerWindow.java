@@ -84,7 +84,7 @@ public class StudyPlannerWindow extends BorderPane {
     }
 
     private void appendMessage(String message) {
-        if (message.startsWith("Error:")) {
+        if (message.startsWith("Oops — Thai's Bot got tangled up:")) {
             appendErrorMessage(message);
             return;
         }
@@ -98,14 +98,14 @@ public class StudyPlannerWindow extends BorderPane {
         HBox titleRow = new HBox(10);
         titleRow.setAlignment(Pos.CENTER_LEFT);
 
-        Label icon = new Label("\uD83D\uDCBB");
+        Label icon = new Label("\uD83E\uDD16\uD83C\uDF93");
         icon.getStyleClass().add("title-icon");
 
         VBox titleText = new VBox(2);
         Label title = new Label("Thai's Bot");
         title.getStyleClass().add("title");
 
-        Label subtitle = new Label("A polished task tracker for tasks, deadlines, events, and tags.");
+        Label subtitle = new Label("A playful task companion with a bright academic vibe.");
         subtitle.getStyleClass().add("subtitle");
         subtitle.setWrapText(true);
 
@@ -114,7 +114,7 @@ public class StudyPlannerWindow extends BorderPane {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Label status = new Label("Ready to help");
+        Label status = new Label("Studio mode");
         status.getStyleClass().add("status-pill");
 
         titleRow.getChildren().addAll(icon, titleText, spacer, status);
@@ -186,12 +186,12 @@ public class StudyPlannerWindow extends BorderPane {
         row.setAlignment(user ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         row.setMaxWidth(Double.MAX_VALUE);
 
-        Label avatar = new Label(user ? "\uD83D\uDE42" : "\uD83E\uDD16");
+        Label avatar = new Label(user ? "\uD83D\uDE42" : "\uD83E\uDD16\uD83C\uDF93");
         avatar.getStyleClass().add(user ? "user-avatar" : "bot-avatar");
 
         Label bubble = new Label(message);
         bubble.getStyleClass().add(user ? "user-bubble" : "bot-bubble");
-        if (message.startsWith("Error:")) {
+        if (message.startsWith("Oops — Thai's Bot got tangled up:")) {
             bubble.getStyleClass().add("error-bubble");
         }
         bubble.setWrapText(true);

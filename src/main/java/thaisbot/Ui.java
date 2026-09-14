@@ -24,8 +24,8 @@ public class Ui {
      * Shows the welcome message when the application starts.
      */
     public void showWelcome() {
-        System.out.println("Hello! I'm Thai's Bot.");
-        System.out.println("What can I do for you today?");
+        System.out.println("Hello! I'm Thai's Bot. Let's make the chaos manageable.");
+        System.out.println("Bring me tasks, deadlines, events, and tags.");
     }
 
     /**
@@ -40,7 +40,7 @@ public class Ui {
      * Shows the goodbye message when the application exits.
      */
     public void showBye() {
-        System.out.println("Bye. Hope to see you again soon!");
+        System.out.println("All done for now. Come back whenever the stack grows.");
     }
 
     /**
@@ -48,7 +48,7 @@ public class Ui {
      * @param message the error description
      */
     public void showError(String message) {
-        System.out.println("Error: " + message);
+        System.out.println("Oops — Thai's Bot got tangled up: " + message);
     }
 
     /**
@@ -56,7 +56,7 @@ public class Ui {
      * @param tasks the task list to display
      */
     public void showTaskList(TaskList tasks) {
-        System.out.println("Here are the tasks in your list:");
+        System.out.println("Here's your task lineup:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
         }
@@ -68,7 +68,7 @@ public class Ui {
      * @param taskCount current number of tasks
      */
     public void showTaskAdded(Task task, int taskCount) {
-        System.out.println("Got it. I've added this task:");
+        System.out.println("Nice! I've tucked this one into the lineup:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
     }
@@ -78,7 +78,7 @@ public class Ui {
      * @param task the task that was marked
      */
     public void showTaskMarkedDone(Task task) {
-        System.out.println("Nice! I've marked this task as done:");
+        System.out.println("Great job. This task is officially done:");
         System.out.println("  " + task);
     }
 
@@ -87,7 +87,7 @@ public class Ui {
      * @param task the task that was unmarked
      */
     public void showTaskMarkedNotDone(Task task) {
-        System.out.println("OK, I've marked this task as not done yet:");
+        System.out.println("No worries. I've put this one back on the list:");
         System.out.println("  " + task);
     }
 
@@ -97,7 +97,7 @@ public class Ui {
      * @param taskCount current number of tasks
      */
     public void showTaskRemoved(Task task, int taskCount) {
-        System.out.println("Noted. I've removed this task:");
+        System.out.println("Out it goes:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
     }
@@ -108,7 +108,7 @@ public class Ui {
      * @param date the date to match
      */
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
-        System.out.println("Here are the deadlines and events on " + date + ":");
+        System.out.println("Let's check what's on " + date + ":");
         int shownCount = 0;
         for (Task task : tasks) {
             if (task.occursOn(date)) {
@@ -127,7 +127,7 @@ public class Ui {
      * @param keyword the keyword to match
      */
     public void showMatchingTasks(TaskList tasks, String keyword) {
-        System.out.println("Here are the matching tasks in your list:");
+        System.out.println("Here are the matches I found:");
         int shownCount = 0;
         for (Task task : tasks) {
             if (task.matchesSearch(keyword)) {

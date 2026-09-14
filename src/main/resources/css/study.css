@@ -1,13 +1,13 @@
 .root-pane {
-    -fx-background-color: linear-gradient(to bottom right, #eaf2ff, #f9fbff);
+    -fx-background-color: linear-gradient(to bottom right, #f1ecff, #fff8ea);
 }
 
 .card {
     -fx-background-color: rgba(255, 255, 255, 0.95);
     -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-border-color: rgba(105, 131, 186, 0.18);
-    -fx-effect: dropshadow(gaussian, rgba(30, 46, 77, 0.14), 20, 0.2, 0, 6);
+    -fx-border-color: rgba(118, 94, 178, 0.18);
+    -fx-effect: dropshadow(gaussian, rgba(54, 41, 102, 0.15), 20, 0.2, 0, 6);
 }
 
 .header {
@@ -15,27 +15,27 @@
 }
 
 .title-icon {
-    -fx-font-size: 34px;
-    -fx-text-fill: #36527f;
+    -fx-font-size: 38px;
+    -fx-text-fill: #5a3f99;
 }
 
 .title {
-    -fx-font-size: 28px;
-    -fx-font-weight: 800;
-    -fx-text-fill: #20324a;
+    -fx-font-size: 30px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #2e2458;
 }
 
 .subtitle {
     -fx-font-size: 14px;
-    -fx-text-fill: #5b6c85;
+    -fx-text-fill: #66598b;
 }
 
 .status-pill {
-    -fx-background-color: linear-gradient(to bottom, #dbe8ff, #c8dbfb);
-    -fx-text-fill: #284067;
+    -fx-background-color: linear-gradient(to bottom, #efe1ff, #dcc4ff);
+    -fx-text-fill: #4c356f;
     -fx-background-radius: 999;
     -fx-padding: 7 12 7 12;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
 }
 
 .quick-actions {
@@ -43,15 +43,15 @@
 }
 
 .quick-button {
-    -fx-background-color: linear-gradient(to bottom, #d8e5f7, #c6d8ef);
-    -fx-text-fill: #20324a;
+    -fx-background-color: linear-gradient(to bottom, #e8dcff, #d9c8ff);
+    -fx-text-fill: #2f2459;
     -fx-background-radius: 16;
     -fx-padding: 8 12 8 12;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
 }
 
 .quick-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #cdddf1, #b9cee7);
+    -fx-background-color: linear-gradient(to bottom, #deceff, #cab5ff);
 }
 
 .chat-scroll {
@@ -66,47 +66,47 @@
 }
 
 .command-field {
-    -fx-background-color: #f7f9fd;
+    -fx-background-color: #fcfaff;
     -fx-background-radius: 14;
     -fx-border-radius: 14;
-    -fx-border-color: #d5deea;
+    -fx-border-color: #ddd4ef;
     -fx-padding: 11 14 11 14;
 }
 
 .command-field:focused {
-    -fx-border-color: #7294d0;
+    -fx-border-color: #8c6fca;
     -fx-background-color: #ffffff;
 }
 
 .send-button {
-    -fx-background-color: linear-gradient(to bottom, #4e7ed3, #3f68b2);
+    -fx-background-color: linear-gradient(to bottom, #7f5fd0, #6348a6);
     -fx-text-fill: white;
-    -fx-font-weight: 800;
+    -fx-font-weight: 900;
     -fx-background-radius: 14;
     -fx-padding: 10 18 10 18;
 }
 
 .send-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #5a89de, #4d73bb);
+    -fx-background-color: linear-gradient(to bottom, #8a6add, #7052b8);
 }
 
 .user-bubble {
-    -fx-background-color: linear-gradient(to bottom, #e2f1ff, #d3e8ff);
+    -fx-background-color: linear-gradient(to bottom, #efe7ff, #e2d4ff);
     -fx-background-radius: 16;
     -fx-padding: 10 14 10 14;
-    -fx-text-fill: #1d3557;
+    -fx-text-fill: #2f2459;
 }
 
 .bot-bubble {
     -fx-background-color: #ffffff;
     -fx-background-radius: 16;
     -fx-padding: 10 14 10 14;
-    -fx-text-fill: #20324a;
-    -fx-effect: dropshadow(gaussian, rgba(30, 46, 77, 0.09), 12, 0.15, 0, 3);
+    -fx-text-fill: #2e2458;
+    -fx-effect: dropshadow(gaussian, rgba(54, 41, 102, 0.10), 12, 0.15, 0, 3);
 }
 
 .error-bubble {
-    -fx-background-color: linear-gradient(to bottom, #ffe8e8, #ffd4d4);
+    -fx-background-color: linear-gradient(to bottom, #ffeaea, #ffd6d6);
     -fx-border-color: #d45a5a;
     -fx-border-width: 1;
     -fx-text-fill: #8b1e1e;
@@ -114,5 +114,5 @@
 
 .user-avatar,
 .bot-avatar {
-    -fx-font-size: 22px;
+    -fx-font-size: 24px;
 }
