@@ -25,7 +25,7 @@ public class Ui {
      */
     public void showWelcome() {
         System.out.println("Hello! I'm Thai's Bot.");
-        System.out.println("What can I do for you today :D?");
+        System.out.println("What can I do for you today?");
     }
 
     /**

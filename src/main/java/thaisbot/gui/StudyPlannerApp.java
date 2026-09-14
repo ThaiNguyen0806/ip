@@ -32,18 +32,18 @@ public class StudyPlannerApp extends Application {
         tasks = loadTasks();
         window = new StudyPlannerWindow(this::handleCommand);
 
-        Scene scene = new Scene(window, 900, 720);
+        Scene scene = new Scene(window, 920, 740);
         String stylesheet = getClass().getResource("/css/study.css").toExternalForm();
         scene.getStylesheets().add(stylesheet);
 
-        stage.setTitle("Thai's Bot Study Hub");
+        stage.setTitle("Thai's Bot");
         stage.setScene(scene);
         stage.show();
 
         ui.showWelcome();
         window.appendMessages(ui.drainMessages());
         window.appendMessages(
-                "Try `todo read book` or `deadline return book /by 2026-09-10`.",
+                "Try `todo read book #fun` or `deadline return book /by 2026-09-10`.",
                 "You can also type `list`, `find book`, or `bye`."
         );
     }

@@ -1,44 +1,57 @@
 .root-pane {
-    -fx-background-color: linear-gradient(to bottom right, #eef3f8, #f8fbff);
+    -fx-background-color: linear-gradient(to bottom right, #eaf2ff, #f9fbff);
 }
 
 .card {
-    -fx-background-color: rgba(255, 255, 255, 0.92);
-    -fx-background-radius: 18;
-    -fx-border-radius: 18;
-    -fx-border-color: rgba(127, 150, 178, 0.18);
-    -fx-effect: dropshadow(gaussian, rgba(42, 66, 94, 0.14), 20, 0.2, 0, 6);
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(105, 131, 186, 0.18);
+    -fx-effect: dropshadow(gaussian, rgba(30, 46, 77, 0.14), 20, 0.2, 0, 6);
 }
 
 .header {
     -fx-padding: 18 20 14 20;
 }
 
+.title-icon {
+    -fx-font-size: 34px;
+    -fx-text-fill: #36527f;
+}
+
 .title {
     -fx-font-size: 28px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #1f2f44;
+    -fx-font-weight: 800;
+    -fx-text-fill: #20324a;
 }
 
 .subtitle {
     -fx-font-size: 14px;
-    -fx-text-fill: #5d6f82;
+    -fx-text-fill: #5b6c85;
+}
+
+.status-pill {
+    -fx-background-color: linear-gradient(to bottom, #dbe8ff, #c8dbfb);
+    -fx-text-fill: #284067;
+    -fx-background-radius: 999;
+    -fx-padding: 7 12 7 12;
+    -fx-font-weight: 700;
 }
 
 .quick-actions {
-    -fx-padding: 8 0 0 0;
+    -fx-padding: 2 0 0 0;
 }
 
 .quick-button {
-    -fx-background-color: linear-gradient(to bottom, #dfeaf7, #cddcee);
-    -fx-text-fill: #1f2f44;
+    -fx-background-color: linear-gradient(to bottom, #d8e5f7, #c6d8ef);
+    -fx-text-fill: #20324a;
     -fx-background-radius: 16;
     -fx-padding: 8 12 8 12;
-    -fx-font-weight: 600;
+    -fx-font-weight: 700;
 }
 
 .quick-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #d6e4f4, #bdd0e7);
+    -fx-background-color: linear-gradient(to bottom, #cdddf1, #b9cee7);
 }
 
 .chat-scroll {
@@ -53,43 +66,50 @@
 }
 
 .command-field {
-    -fx-background-color: #f7f9fc;
+    -fx-background-color: #f7f9fd;
     -fx-background-radius: 14;
     -fx-border-radius: 14;
-    -fx-border-color: #d6e0eb;
+    -fx-border-color: #d5deea;
     -fx-padding: 11 14 11 14;
 }
 
 .command-field:focused {
-    -fx-border-color: #86a8d1;
+    -fx-border-color: #7294d0;
     -fx-background-color: #ffffff;
 }
 
 .send-button {
-    -fx-background-color: linear-gradient(to bottom, #5f7ea8, #486384);
+    -fx-background-color: linear-gradient(to bottom, #4e7ed3, #3f68b2);
     -fx-text-fill: white;
-    -fx-font-weight: 700;
+    -fx-font-weight: 800;
     -fx-background-radius: 14;
     -fx-padding: 10 18 10 18;
 }
 
 .send-button:hover {
-    -fx-background-color: linear-gradient(to bottom, #6887b3, #557399);
+    -fx-background-color: linear-gradient(to bottom, #5a89de, #4d73bb);
 }
 
 .user-bubble {
-    -fx-background-color: linear-gradient(to bottom, #e5f0fb, #d9e8f7);
+    -fx-background-color: linear-gradient(to bottom, #e2f1ff, #d3e8ff);
     -fx-background-radius: 16;
     -fx-padding: 10 14 10 14;
-    -fx-text-fill: #203045;
+    -fx-text-fill: #1d3557;
 }
 
 .bot-bubble {
     -fx-background-color: #ffffff;
     -fx-background-radius: 16;
     -fx-padding: 10 14 10 14;
-    -fx-text-fill: #203045;
-    -fx-effect: dropshadow(gaussian, rgba(42, 66, 94, 0.09), 12, 0.15, 0, 3);
+    -fx-text-fill: #20324a;
+    -fx-effect: dropshadow(gaussian, rgba(30, 46, 77, 0.09), 12, 0.15, 0, 3);
+}
+
+.error-bubble {
+    -fx-background-color: linear-gradient(to bottom, #ffe8e8, #ffd4d4);
+    -fx-border-color: #d45a5a;
+    -fx-border-width: 1;
+    -fx-text-fill: #8b1e1e;
 }
 
 .user-avatar,
