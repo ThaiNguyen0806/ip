@@ -32,7 +32,7 @@ public class StudyPlannerUi extends Ui {
     @Override
     public void showWelcome() {
         addMessages("Hello! I'm Thai's Bot.",
-                "I can help you keep track of tasks, deadlines, and events.");
+                "What can I do for you today?");
     }
 
     @Override

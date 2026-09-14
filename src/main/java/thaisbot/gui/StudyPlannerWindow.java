@@ -1,5 +1,6 @@
 package thaisbot.gui;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
@@ -20,8 +21,8 @@ import javafx.scene.layout.VBox;
  * Visual window for the chatbot interface.
  */
 public class StudyPlannerWindow extends BorderPane {
-    private static final String QUICK_TODO = "todo read a book";
-    private static final String QUICK_DEADLINE = "deadline submit project /by 2026-09-10";
+    private static final String QUICK_TODO = "todo read a book #fun";
+    private static final String QUICK_DEADLINE = "deadline submit project /by 2026-09-10 #work";
     private static final String QUICK_FIND = "find book";
     private static final String QUICK_LIST = "list";
 
@@ -51,7 +52,7 @@ public class StudyPlannerWindow extends BorderPane {
     public void appendMessages(String... messages) {
         assert messages != null;
         for (String message : messages) {
-            appendBotMessage(message);
+            appendMessage(message);
         }
     }
 
@@ -59,7 +60,7 @@ public class StudyPlannerWindow extends BorderPane {
      * Adds multiple bot messages from a list to the conversation.
      * @param messages messages to display
      */
-    public void appendMessages(java.util.List<String> messages) {
+    public void appendMessages(List<String> messages) {
         assert messages != null;
         appendMessages(messages.toArray(new String[0]));
     }
@@ -74,7 +75,7 @@ public class StudyPlannerWindow extends BorderPane {
     }
 
     /**
-     * Adds a user message to the conversation.
+     * Adds a single user message to the conversation.
      * @param message message to display
      */
     public void appendUserMessage(String message) {
@@ -82,16 +83,41 @@ public class StudyPlannerWindow extends BorderPane {
         scrollToBottom();
     }
 
+    private void appendMessage(String message) {
+        if (message.startsWith("Error:")) {
+            appendErrorMessage(message);
+            return;
+        }
+        appendBotMessage(message);
+    }
+
     private Node createHeader() {
-        VBox header = new VBox(6);
+        VBox header = new VBox(8);
         header.getStyleClass().addAll("header", "card");
 
+        HBox titleRow = new HBox(10);
+        titleRow.setAlignment(Pos.CENTER_LEFT);
+
+        Label icon = new Label("\uD83D\uDCBB");
+        icon.getStyleClass().add("title-icon");
+
+        VBox titleText = new VBox(2);
         Label title = new Label("Thai's Bot");
         title.getStyleClass().add("title");
 
-        Label subtitle = new Label("Keep track of tasks, deadlines, and events in one place.");
+        Label subtitle = new Label("A polished task tracker for tasks, deadlines, events, and tags.");
         subtitle.getStyleClass().add("subtitle");
         subtitle.setWrapText(true);
+
+        titleText.getChildren().addAll(title, subtitle);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Label status = new Label("Ready to help");
+        status.getStyleClass().add("status-pill");
+
+        titleRow.getChildren().addAll(icon, titleText, spacer, status);
 
         HBox quickActions = new HBox(8);
         quickActions.getStyleClass().add("quick-actions");
@@ -102,7 +128,7 @@ public class StudyPlannerWindow extends BorderPane {
                 createQuickActionButton("Show list", QUICK_LIST)
         );
 
-        header.getChildren().addAll(title, subtitle, quickActions);
+        header.getChildren().addAll(titleRow, quickActions);
         return header;
     }
 
@@ -121,7 +147,7 @@ public class StudyPlannerWindow extends BorderPane {
         HBox inputPane = new HBox(10);
         inputPane.getStyleClass().addAll("input-pane", "card");
 
-        inputField.setPromptText("Try: todo read book");
+        inputField.setPromptText("Try: todo read book #fun");
         inputField.getStyleClass().add("command-field");
         HBox.setHgrow(inputField, Priority.ALWAYS);
         inputField.setOnAction(event -> submitCommand());
@@ -160,11 +186,14 @@ public class StudyPlannerWindow extends BorderPane {
         row.setAlignment(user ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         row.setMaxWidth(Double.MAX_VALUE);
 
-        Label avatar = new Label(user ? "🙂" : "🤖");
+        Label avatar = new Label(user ? "\uD83D\uDE42" : "\uD83E\uDD16");
         avatar.getStyleClass().add(user ? "user-avatar" : "bot-avatar");
 
         Label bubble = new Label(message);
         bubble.getStyleClass().add(user ? "user-bubble" : "bot-bubble");
+        if (message.startsWith("Error:")) {
+            bubble.getStyleClass().add("error-bubble");
+        }
         bubble.setWrapText(true);
         bubble.setMaxWidth(560);
 
@@ -179,9 +208,11 @@ public class StudyPlannerWindow extends BorderPane {
         return row;
     }
 
+    private void appendErrorMessage(String message) {
+        appendBotMessage(message);
+    }
+
     private void scrollToBottom() {
-        Platform.runLater(() -> {
-            scrollPane.setVvalue(1.0);
-        });
+        Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 }
