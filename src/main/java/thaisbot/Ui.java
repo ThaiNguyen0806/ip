@@ -110,10 +110,12 @@ public class Ui {
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
         System.out.println("Let's check what's on " + date + ":");
         int shownCount = 0;
-        for (Task task : tasks) {
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
             if (task.occursOn(date)) {
                 shownCount++;
-                System.out.println(shownCount + "." + task);
+                // Show the full-list number, so that mark/unmark/delete act on this task.
+                System.out.println((i + 1) + "." + task);
             }
         }
         if (shownCount == 0) {
@@ -129,10 +131,12 @@ public class Ui {
     public void showMatchingTasks(TaskList tasks, String keyword) {
         System.out.println("Here are the matches I found:");
         int shownCount = 0;
-        for (Task task : tasks) {
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
             if (task.matchesSearch(keyword)) {
                 shownCount++;
-                System.out.println(shownCount + "." + task);
+                // Show the full-list number, so that mark/unmark/delete act on this task.
+                System.out.println((i + 1) + "." + task);
             }
         }
         if (shownCount == 0) {

@@ -149,6 +149,7 @@ Format: `find <keyword>`
 - The search is **case-sensitive**: `find book` does not match `Book`.
 - Partial words match: `find boo` matches `read book`.
 - Searching by tag works with or without `#`, e.g., `find school` or `find #school`.
+- Each result shows its number in the full list, so you can use it directly with `mark`, `unmark` or `delete`.
 
 Examples:
 - `find book`
@@ -159,6 +160,8 @@ Examples:
 Shows deadlines due on the given date, and events that are happening on that date (including multi-day events).
 
 Format: `on <date>`
+
+Each result shows its number in the full list, like `find`.
 
 Example: `on 2026-09-15`
 
