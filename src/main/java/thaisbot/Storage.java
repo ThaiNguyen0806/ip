@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -61,6 +62,10 @@ public class Storage {
                 }
             }
             return new TaskList(tasks);
+        } catch (ThaisBotException e) {
+            Path backupFile = backUpDataFile();
+            throw new ThaisBotException(e.getMessage() + " I made a backup at " + backupFile
+                    + " and started with an empty list.");
         } catch (IOException e) {
             throw new ThaisBotException("I couldn't load tasks from disk.");
         }
@@ -185,6 +190,22 @@ public class Storage {
             // Fall through to the uniform error below.
         }
         throw corruptedTaskDataException(lineNumber);
+    }
+
+    /**
+     * Copies the data file to a backup file, so that unreadable tasks are not lost when
+     * the (empty) task list is saved over the data file later.
+     * @return path of the backup file
+     * @throws ThaisBotException if the backup cannot be written
+     */
+    private Path backUpDataFile() throws ThaisBotException {
+        Path backupFile = Paths.get(dataFile + ".bak");
+        try {
+            Files.copy(dataFile, backupFile, StandardCopyOption.REPLACE_EXISTING);
+            return backupFile;
+        } catch (IOException e) {
+            throw new ThaisBotException("Saved task data is corrupted and I couldn't back it up.");
+        }
     }
 
     private ThaisBotException corruptedTaskDataException(int lineNumber) {
