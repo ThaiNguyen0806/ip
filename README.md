@@ -9,7 +9,7 @@ Thai's Bot is a JavaFX desktop chatbot for managing todos, deadlines and events,
 
 ## Running the app
 
-Prerequisite: **Java 25**. On macOS, use the [Azul Zulu JDK 25 **JDK FX**](https://www.azul.com/downloads/?version=java-25-lts&package=jdk-fx#zulu) package.
+Prerequisite: **Java 25**. On Apple Silicon Macs (M1 or later), use the [Azul Zulu JDK 25 **JDK FX**](https://www.azul.com/downloads/?version=java-25-lts&package=jdk-fx#zulu) package. On Intel Macs, use a standard JDK 25 (e.g., [Temurin](https://adoptium.net/temurin/releases/?version=25)).
 
 Put `duke.jar` in an empty folder, open a terminal in that folder, and run:
 
@@ -45,7 +45,7 @@ Run these from the project root. On Windows, use `gradlew` (or `.\gradlew` in Po
 | Check the coding standard | `./gradlew checkstyleMain checkstyleTest` |
 | Build the JAR (`build/libs/duke.jar`) | `./gradlew clean shadowJar` |
 
-The JAR includes JavaFX for Windows, macOS and Linux, so one JAR works on all three.
+The JAR includes JavaFX for Windows, Linux and Intel macOS, so one JAR works on all three. On Apple Silicon Macs, the JavaFX included in the Zulu JDK FX is used instead.
 
 ## Project structure
 
