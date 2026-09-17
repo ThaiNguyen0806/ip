@@ -22,7 +22,7 @@
    The first line should show version `25`.
    - **Mac users:**
      - Apple Silicon Macs (M1 or later): install the [Azul Zulu JDK 25 **JDK FX**](https://www.azul.com/downloads/?version=java-25-lts&package=jdk-fx#zulu) package, which includes JavaFX.
-     - Intel Macs: a standard JDK 25 (e.g., [Temurin](https://adoptium.net/temurin/releases/?version=25)) works.
+     - Intel Macs: a standard JDK 25 (e.g., [Temurin](https://adoptium.net/temurin/releases/?version=25)) should work.
 
 2. **Download** the latest `duke.jar` from the [Releases page](https://github.com/ThaiNguyen0806/ip/releases).
 
@@ -225,8 +225,8 @@ A: Run it from a terminal with `java -jar duke.jar` instead, as described in the
 
 ## Known issues
 
-- On Apple Silicon Macs, the app does not start with a standard JDK. Use the Azul Zulu **JDK FX** 25 package mentioned in the [Quick start](#quick-start).
-- On Intel Macs, the app may crash at start-up with the Azul Zulu **JDK FX** package. Use a standard JDK 25 (e.g., Temurin) instead.
+- On Apple Silicon Macs, the app may not start with a standard JDK. Use the Azul Zulu **JDK FX** 25 package mentioned in the [Quick start](#quick-start).
+- On some Intel Macs, the app may not start with the Azul Zulu **JDK FX** package. If this happens, use a standard JDK 25 (e.g., Temurin) instead.
 
 ## Command summary
 
