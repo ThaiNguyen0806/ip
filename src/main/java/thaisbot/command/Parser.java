@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -25,14 +26,19 @@ import thaisbot.command.commands.UnmarkCommand;
  * different argument types used by commands.
  */
 public class Parser {
+    // STRICT resolving rejects non-existent dates (e.g., 2026-02-30) instead of silently changing
+    // them to the last valid day. STRICT needs "uuuu" (year) instead of "yyyy" (year-of-era).
     private static final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter DATE_TIME_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm").withResolverStyle(ResolverStyle.STRICT);
     private static final DateTimeFormatter DATE_TIME_COLON_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm").withResolverStyle(ResolverStyle.STRICT);
     private static final String TAGS_HELP_MESSAGE =
             "Tags must use # followed by letters or numbers only.";
+    private static final String TODO_USAGE = "Use: todo <description> [#tag ...]";
+    /** Separator used between fields in the data file, so it cannot appear inside a description. */
+    private static final String DATA_SEPARATOR = "|";
 
     /**
      * Parses a raw user input line and returns the corresponding Command.
@@ -56,9 +62,11 @@ public class Parser {
                 return new UnmarkCommand(parseTaskNumberArgument(parts,
                         "Please provide a task number to unmark."));
             case "todo":
-                ParsedTaggedText todo = parseTaggedText(parts[1],
-                        "Use: todo <description> [#tag ...]");
-                return new AddTodoCommand(todo.getText(), todo.getTags());
+                if (parts.length < 2) {
+                    throw new ThaisBotException(TODO_USAGE);
+                }
+                ParsedTaggedText todo = parseTaggedText(parts[1], TODO_USAGE);
+                return new AddTodoCommand(checkDescription(todo.getText()), todo.getTags());
             case "deadline":
                 return parseDeadlineCommand(parts);
             case "event":
@@ -183,7 +191,8 @@ public class Parser {
         ParsedDateTimeAndTags by = parseDateTimeAndTags(deadlineParts[1].trim(),
                 "Deadline date/time must be yyyy-MM-dd or yyyy-MM-dd HHmm.",
                 "Use: deadline <description> /by <yyyy-MM-dd or yyyy-MM-dd HHmm> [#tag ...]");
-        return new AddDeadlineCommand(deadlineParts[0].trim(), by.getDateTime(), by.getTags());
+        return new AddDeadlineCommand(checkDescription(deadlineParts[0].trim()),
+                by.getDateTime(), by.getTags());
     }
 
     private Command parseEventCommand(String[] parts) throws ThaisBotException {
@@ -200,7 +209,23 @@ public class Parser {
         if (to.getDateTime().getValue().isBefore(from.getValue())) {
             throw new ThaisBotException("Event end cannot be before event start.");
         }
-        return new AddEventCommand(eventParts[0].trim(), from, to.getDateTime(), to.getTags());
+        return new AddEventCommand(checkDescription(eventParts[0].trim()), from,
+                to.getDateTime(), to.getTags());
+    }
+
+    /**
+     * Rejects descriptions containing the data file separator. Such descriptions would be
+     * saved in a format that cannot be read back the next time the app starts.
+     * @param description task description
+     * @return the same description, if it is valid
+     * @throws ThaisBotException if the description contains the separator
+     */
+    private String checkDescription(String description) throws ThaisBotException {
+        if (description.contains(DATA_SEPARATOR)) {
+            throw new ThaisBotException(
+                    "Descriptions cannot contain the " + DATA_SEPARATOR + " character.");
+        }
+        return description;
     }
 
     private LocalDate parseQueryDate(String[] parts) throws ThaisBotException {
