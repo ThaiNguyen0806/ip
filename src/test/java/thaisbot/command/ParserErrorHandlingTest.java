@@ -38,6 +38,13 @@ public class ParserErrorHandlingTest {
     }
 
     @Test
+    public void parse_eventWithToBeforeFrom_throwsUsageError() {
+        assertThrows(ThaisBotException.class, () ->
+                parser.parse("event weird /to 2026-09-18 /from 2026-09-19"));
+        assertThrows(ThaisBotException.class, () -> parser.parse("event no start /to 2026-09-18"));
+    }
+
+    @Test
     public void parse_nonExistentDate_throwsException() {
         assertThrows(ThaisBotException.class, () -> parser.parse("deadline a /by 2026-02-30"));
         assertThrows(ThaisBotException.class, () -> parser.parseDate("2026-13-01"));

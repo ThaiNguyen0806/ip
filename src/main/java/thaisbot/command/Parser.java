@@ -160,6 +160,12 @@ public class Parser {
      * Parses an event command into description, from and to parts.
      */
     public String[] parseEventParts(String input, String usageMessage) throws ThaisBotException {
+        // Splitting alone accepts "/to" before "/from", which would swap the start and end.
+        int fromIndex = input.indexOf(" /from ");
+        int toIndex = input.indexOf(" /to ");
+        if (fromIndex < 0 || toIndex < fromIndex) {
+            throw new ThaisBotException(usageMessage);
+        }
         String[] parts = input.split(" /from | /to ", 3);
         if (parts.length != 3
                 || parts[0].trim().isEmpty()

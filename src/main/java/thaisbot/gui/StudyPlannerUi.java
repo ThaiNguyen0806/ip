@@ -3,9 +3,8 @@ package thaisbot.gui;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
 
 import thaisbot.Ui;
 import thaisbot.task.Task;
@@ -86,25 +85,32 @@ public class StudyPlannerUi extends Ui {
     @Override
     public void showTasksOnDate(TaskList tasks, LocalDate date) {
         addMessages("Let's check what's on " + date + ":");
-        AtomicInteger shownCount = new AtomicInteger();
-        StreamSupport.stream(tasks.spliterator(), false)
-                .filter(task -> task.occursOn(date))
-                .forEach(task -> addMessage(shownCount.incrementAndGet() + "." + task));
-        if (shownCount.get() == 0) {
-            addMessages("No deadlines or events found on that date.");
-        }
+        addNumberedTasks(tasks, task -> task.occursOn(date), "No deadlines or events found on that date.");
     }
 
     @Override
     public void showMatchingTasks(TaskList tasks, String keyword) {
         addMessages("Here are the matches I found:");
-        AtomicInteger shownCount = new AtomicInteger();
-        StreamSupport.stream(tasks.spliterator(), false)
-                .filter(task -> task.matchesSearch(keyword))
-                .forEach(task -> addMessage(shownCount.incrementAndGet() + "." + task));
-        if (shownCount.get() == 0) {
-            addMessages("No matching tasks found.");
+        addNumberedTasks(tasks, task -> task.matchesSearch(keyword), "No matching tasks found.");
+    }
+
+    /**
+     * Adds the tasks that match the filter, each labelled with its number in the full list
+     * (not its position among the matches), so that mark/unmark/delete act on the shown task.
+     * @param tasks the full task list
+     * @param filter condition a task must meet to be shown
+     * @param emptyMessage message to show if no task matches
+     */
+    private void addNumberedTasks(TaskList tasks, Predicate<Task> filter, String emptyMessage) {
+        List<String> lines = IntStream.range(0, tasks.size())
+                .filter(i -> filter.test(tasks.get(i)))
+                .mapToObj(i -> (i + 1) + "." + tasks.get(i))
+                .toList();
+        if (lines.isEmpty()) {
+            addMessages(emptyMessage);
+            return;
         }
+        lines.forEach(this::addMessage);
     }
 
     /**
