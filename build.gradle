@@ -3,7 +3,6 @@ plugins {
     id 'application'
     id 'com.gradleup.shadow' version '9.5.1'
     id 'checkstyle'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 java {
@@ -13,11 +12,6 @@ java {
 
 repositories {
     mavenCentral()
-}
-
-javafx {
-    version = '25.0.1'
-    modules = [ 'javafx.controls' ]
 }
 
 checkstyle {
@@ -35,6 +29,15 @@ tasks.withType(Checkstyle).configureEach {
 
 dependencies {
     String jUnitVersion = '5.14.4'
+    String javaFxVersion = '25.0.1'
+
+    // List JavaFX for every OS (not just the build machine's OS) so the fat JAR is cross-platform,
+    // as recommended by the course's JavaFX tutorial.
+    ['win', 'mac', 'linux'].each { platform ->
+        ['base', 'graphics', 'controls'].each { module ->
+            implementation "org.openjfx:javafx-${module}:${javaFxVersion}:${platform}"
+        }
+    }
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
 
@@ -69,9 +72,13 @@ jar {
 
 shadowJar {
     archiveFileName = 'duke.jar'
+    // JavaFX loads native code; allow it so Java 25 does not print restricted-method warnings.
+    manifest {
+        attributes 'Enable-Native-Access': 'ALL-UNNAMED'
+    }
 }
 
 run {
     standardInput = System.in
-    jvmArgs '--enable-native-access=javafx.graphics'
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
 }
